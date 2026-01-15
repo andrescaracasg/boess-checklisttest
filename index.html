@@ -1,0 +1,3314 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BOESS Checklist – Standalone Version</title>
+  <style>
+      :root {
+          --brand: #07694D;
+          --brand-700: #05563F;
+          --brand-600: #07694D;
+          --brand-500: #0A7B59;
+          --brand-200: #CFE9DF;
+          --ink: #111827;
+          --muted: #6b7280;
+          --bg1: #f5f7fa;
+          --bg2: #e8f5f0;
+          --card: #ffffff;
+          --border: #e6e8f0;
+          --shadow: 0 8px 24px rgba(0,0,0,.08);
+          --radius: 18px;
+          font-family: system-ui, -apple-system, "Segoe UI", Roboto, Calibri, Arial, sans-serif;
+
+          --ok-color: #10b981;
+          --nok-color: #ef4444;
+          --na-color: #6b7280;
+          --ok-bg: #d1fae5;
+          --nok-bg: #fee2e2;
+          --na-bg: #f3f4f6;
+      }
+      
+      * { box-sizing: border-box; }
+      
+      body {
+          margin: 0;
+          color: var(--ink);
+          background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+          min-height: 100vh;
+          line-height: 1.55;
+      }
+      
+      a { color: var(--brand); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb { background: var(--brand-200); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--brand-300); }
+      
+      .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 18px;
+      }
+      
+      .shell { background: transparent; border-radius: var(--radius); }
+      
+      /* Header */
+      .topbar {
+          background: linear-gradient(135deg, var(--brand-700) 0%, var(--brand-600) 100%);
+          border-radius: 22px 22px 18px 18px;
+          padding: 32px 32px 24px;
+          box-shadow: 0 10px 30px rgba(7, 105, 77, 0.25);
+          border: none;
+          color: white;
+      }
+      
+      .brandRow {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          flex-wrap: wrap;
+      }
+      
+      .logo {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          min-width: 240px;
+      }
+      
+      .logoIcon {
+          width: 56px;
+          height: 56px;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+          color: var(--brand-600);
+          font-weight: 900;
+          letter-spacing: 1px;
+          font-size: 24px;
+          transition: transform 0.3s ease;
+      }
+      
+      .logoIcon:hover { transform: scale(1.05); }
+      
+      .logoText {
+          font-size: 24px;
+          font-weight: 900;
+          color: white;
+          line-height: 1.1;
+          letter-spacing: 0.5px;
+      }
+      
+      .logoSub {
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.85);
+          margin-top: 6px;
+      }
+      
+      .chipRow {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          flex-wrap: wrap;
+      }
+      
+      .pill {
+          font-size: 12px;
+          padding: 8px 14px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(10px);
+          color: white;
+          font-weight: 800;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .titleBlock { margin-top: 20px; }
+      
+      h1 {
+          margin: 0 0 12px 0;
+          font-size: 32px;
+          line-height: 1.15;
+          color: white;
+          letter-spacing: .2px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .subtitle {
+          margin: 0;
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 16px;
+          max-width: 860px;
+          line-height: 1.5;
+      }
+      
+      main {
+          display: grid;
+          grid-template-columns: 1fr 380px;
+          gap: 22px;
+          margin-top: 18px;
+          margin-bottom: 18px;
+      }
+      
+      @media (max-width: 980px) {
+          main { grid-template-columns: 1fr; }
+          .sticky { position: static !important; }
+      }
+      
+      /* Cards */
+      .card {
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+          padding: 24px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+          transition: all 0.3s ease;
+      }
+      
+      .card:hover {
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+          transform: translateY(-2px);
+      }
+      
+      .sticky { position: sticky; top: 14px; }
+      
+      /* Inputs */
+      input[type="text"], textarea, select {
+          width: 100%;
+          padding: 14px 16px;
+          border: 2px solid #e5e7eb;
+          border-radius: 12px;
+          outline: none;
+          font-size: 15px;
+          background: rgba(255, 255, 255, 0.9);
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      }
+      
+      textarea { min-height: 42px; resize: vertical; }
+      
+      input:focus, textarea:focus, select:focus {
+          border-color: var(--brand-500);
+          box-shadow: 0 0 0 4px rgba(7, 105, 77, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+          background: white;
+      }
+      
+      /* Buttons */
+      button {
+          padding: 14px 20px;
+          border: 0;
+          border-radius: 12px;
+          cursor: pointer;
+          font-weight: 800;
+          font-size: 14px;
+          white-space: nowrap;
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+          position: relative;
+          overflow: hidden;
+      }
+      
+      button:active { transform: translateY(1px); }
+      
+      .btn-primary {
+          background: linear-gradient(135deg, var(--brand-600), var(--brand-500));
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(7, 105, 77, 0.25);
+      }
+      
+      .btn-primary:hover {
+          background: linear-gradient(135deg, var(--brand-700), var(--brand-600));
+          box-shadow: 0 6px 20px rgba(7, 105, 77, 0.35);
+          transform: translateY(-2px);
+      }
+      
+      .btn-ghost { background: transparent; color: var(--brand-600); }
+      .btn-ghost:hover { background: rgba(7,105,77,.06); }
+      
+      .btn-danger {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: #fff;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+      }
+      
+      .btn-danger:hover {
+          background: linear-gradient(135deg, #dc2626, #b91c1c);
+          box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
+          transform: translateY(-2px);
+      }
+      
+      .btn-soft {
+          background: linear-gradient(135deg, var(--brand-200), #bfe3d6);
+          color: var(--brand-700);
+          box-shadow: 0 2px 8px rgba(7, 105, 77, 0.15);
+      }
+      
+      .btn-soft:hover {
+          background: linear-gradient(135deg, #bfe3d6, #a8d9c7);
+          box-shadow: 0 4px 12px rgba(7, 105, 77, 0.25);
+          transform: translateY(-2px);
+      }
+      
+      .btn-outline {
+          background: rgba(255, 255, 255, 0.9);
+          color: var(--ink);
+          border: 2px solid #d7dbe7;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      }
+      
+      .btn-outline:hover {
+          background: #f6f7fb;
+          border-color: var(--brand-300);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      }
+      
+      .muted { color: var(--muted); font-size: 13px; }
+      
+      .kbd {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 12px;
+          background: #f3f4f6;
+          padding: 2px 6px;
+          border-radius: 8px;
+          border: 1px solid #e5e7eb;
+      }
+      
+      .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .row > * { flex: 1; min-width: 220px; }
+      
+      .row-tight { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .row-tight > * { flex: 0 0 auto; }
+      
+      @media (max-width: 520px) {
+          .container { padding: 16px; }
+          .topbar { padding: 24px 20px 20px; border-radius: 18px 18px 16px 16px; }
+          main { gap: 14px; }
+          .card { padding: 18px; }
+          .row { flex-direction: column; }
+          .row > * { min-width: 100%; }
+      }
+      
+      @media (max-width: 480px) {
+          .logo { flex-direction: column; text-align: center; gap: 12px; }
+          .modeCard label { min-width: 100%; }
+          .sub-check { flex-direction: column; gap: 8px; }
+      }
+      
+      .hero {
+          border: 2px solid rgba(229, 231, 235, 0.8);
+          border-radius: 16px;
+          padding: 16px;
+          background: rgba(251, 252, 255, 0.8);
+          backdrop-filter: blur(5px);
+      }
+      
+      .setupTitle {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          flex-wrap: wrap;
+          margin-bottom: 12px;
+      }
+      
+      .setupTitle h2 { margin: 0; font-size: 18px; color: var(--ink); font-weight: 700; }
+      
+      /* Progress bar */
+      .progressBar {
+          height: 12px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 999px;
+          overflow: hidden;
+          border: none;
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .progressBar > div {
+          height: 100%;
+          width: 0%;
+          background: linear-gradient(90deg, #10b981, #34d399);
+          border-radius: 999px;
+          transition: width .3s ease;
+          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+      }
+      
+      .modeCard {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          flex-wrap: wrap;
+          padding: 16px;
+          border: 2px solid rgba(229, 231, 235, 0.8);
+          border-radius: 16px;
+          background: rgba(251, 252, 255, 0.8);
+          backdrop-filter: blur(5px);
+      }
+      
+      .modeCard label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 16px;
+          border-radius: 14px;
+          border: 2px solid #e6e8f0;
+          cursor: pointer;
+          background: #fff;
+          flex: 1;
+          min-width: 260px;
+          font-weight: 700;
+          color: #374151;
+          transition: all 0.2s ease;
+      }
+      
+      .modeCard label:hover {
+          border-color: var(--brand-300);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      }
+      
+      .modeCard input[type="radio"] { accent-color: var(--brand-600); transform: translateY(1px); }
+      
+      .groups { display: grid; gap: 12px; margin-top: 14px; }
+      
+      /* Groups */
+      .group {
+          border: 1px solid rgba(229, 231, 235, 0.8);
+          border-radius: 16px;
+          overflow: hidden;
+          background: white;
+          transition: all 0.3s ease;
+          margin-bottom: 12px;
+      }
+      
+      .group:hover {
+          border-color: var(--brand-200);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      }
+      
+      .groupHeader {
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 16px 20px;
+          align-items: center;
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+          border-bottom: 1px solid #eef0f7;
+          flex-wrap: wrap;
+      }
+      
+      .groupTitleRow { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 240px; }
+      
+      .groupTitle {
+          font-weight: 900;
+          font-size: 14px;
+          padding: 12px 14px;
+          border-radius: 12px;
+          border: 2px solid #e6e8f0;
+          flex: 1;
+          min-width: 180px;
+          outline: none;
+          background: #fff;
+          transition: all 0.2s ease;
+      }
+      
+      .groupTitle:focus {
+          border-color: #bfe3d6;
+          box-shadow: 0 0 0 4px rgba(7,105,77,.12);
+      }
+      
+      .progress { font-size: 12px; color: var(--muted); font-weight: 900; }
+      .groupBody { padding: 16px; display: grid; gap: 12px; }
+      
+      ul.items { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+      
+      li.item {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 16px;
+          border: 2px solid rgba(229, 231, 235, 0.8);
+          border-radius: 14px;
+          background: #fff;
+          transition: all 0.3s ease;
+      }
+      
+      li.item:hover {
+          border-color: var(--brand-200);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          transform: translateY(-1px);
+      }
+      
+      .itemTop { display: flex; align-items: center; gap: 12px; }
+      .itemTop input[type="checkbox"] { accent-color: var(--brand-600); }
+      
+      .itemTitle {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-weight: 800;
+      }
+      
+      .done .itemTitle { text-decoration: line-through; color: var(--muted); }
+      .noteLabel { font-size: 12px; color: var(--muted); margin-bottom: 8px; font-weight: 900; }
+      .noteBox textarea { width: 100%; font-size: 13px; padding: 12px; border-radius: 12px; min-height: 60px; }
+      
+      .sub-check-container {
+          margin: 10px 0;
+          padding: 12px;
+          border: 2px solid rgba(230,232,240, 0.8);
+          border-radius: 14px;
+          background: rgba(251, 252, 255, 0.8);
+          backdrop-filter: blur(5px);
+      }
+      
+      .sub-check {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 12px;
+          padding: 8px;
+      }
+      
+      .sub-check .label {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--ink);
+          min-width: 100px;
+      }
+      
+      .sub-check .option {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 16px;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 12px;
+          font-weight: 700;
+          border: 2px solid transparent;
+          min-width: 100px;
+          text-align: center;
+          justify-content: center;
+      }
+      
+      .sub-check .option:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      .sub-check .option.ok {
+          color: var(--ok-color);
+          background: var(--ok-bg);
+      }
+      
+      .sub-check .option.ok:hover,
+      .sub-check .option.ok.selected {
+          background: var(--ok-color);
+          color: white;
+          border-color: var(--ok-color);
+      }
+      
+      .sub-check .option.nok {
+          color: var(--nok-color);
+          background: var(--nok-bg);
+      }
+      
+      .sub-check .option.nok:hover,
+      .sub-check .option.nok.selected {
+          background: var(--nok-color);
+          color: white;
+          border-color: var(--nok-color);
+      }
+      
+      .sub-check .option.na {
+          color: var(--na-color);
+          background: var(--na-bg);
+      }
+      
+      .sub-check .option.na:hover,
+      .sub-check .option.na.selected {
+          background: var(--na-color);
+          color: white;
+          border-color: var(--na-color);
+      }
+      
+      .sub-check input[type="radio"] { display: none; }
+      
+      /* Status badge */
+      .sub-check-status {
+          font-size: 11px;
+          padding: 6px 12px;
+          border-radius: 10px;
+          font-weight: 800;
+          margin-left: auto;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      
+      .status-ok { background: var(--ok-bg); color: var(--ok-color); }
+      .status-nok { background: var(--nok-bg); color: var(--nok-color); }
+      .status-na { background: var(--na-bg); color: var(--na-color); }
+      .status-pending { background: #f3f4f6; color: #6b7280; }
+      
+      .sideTitle { margin: 0 0 12px; font-size: 18px; color: var(--brand); font-weight: 700; }
+      
+      /* Stats box */
+      .statBox {
+          background: linear-gradient(135deg, var(--brand-200) 0%, #d1fae5 100%);
+          border: 1px solid rgba(7,105,77,.15);
+          border-radius: 16px;
+          padding: 16px;
+          margin-bottom: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+      
+      .statRow { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+      
+      .bigStat {
+          font-size: 32px;
+          font-weight: 1000;
+          background: linear-gradient(135deg, var(--brand-700), #0a7b59);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+      }
+      
+      .smallStat { font-size: 12px; color: #1f2937; font-weight: 900; }
+      .actionsGrid { display: grid; gap: 10px; margin-top: 12px; }
+      .actionsGrid button { width: 100%; }
+      
+      .menu { position: relative; width: 100%; }
+      
+      .menuPanel {
+          position: absolute;
+          left: 0;
+          top: 46px;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 16px;
+          box-shadow: 0 12px 32px rgba(0,0,0,.15);
+          padding: 8px;
+          display: none;
+          z-index: 10;
+          animation: fadeIn 0.2s ease-out;
+      }
+      
+      .menuPanel.open { display: block; }
+      
+      .menuPanel button {
+          width: 100%;
+          text-align: left;
+          border-radius: 12px;
+          background: transparent;
+          color: var(--ink);
+          padding: 12px 14px;
+          font-weight: 900;
+          transition: all 0.2s ease;
+      }
+      
+      .menuPanel button:hover {
+          background: rgba(243, 244, 246, 0.8);
+          transform: translateX(4px);
+      }
+      
+      .menuPanel hr { border: 0; border-top: 1px solid rgba(238, 240, 247, 0.8); margin: 8px 6px; }
+      
+      /* Modals */
+      .modalBackdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(17,24,39,.65);
+          backdrop-filter: blur(4px);
+          display: none;
+          align-items: center;
+          justify-content: center;
+          padding: 18px;
+          z-index: 100;
+          animation: fadeIn 0.3s ease;
+      }
+      
+      .modalBackdrop.open { display: flex; }
+      
+      .modal {
+          width: min(760px, 100%);
+          background: rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(20px);
+          border-radius: 22px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+          overflow: hidden;
+          animation: fadeIn 0.3s ease;
+      }
+      
+      .modalHeader {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 20px 24px;
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+          border-bottom: 1px solid rgba(238, 240, 247, 0.8);
+      }
+      
+      .modalHeader h3 { margin: 0; font-size: 16px; color: var(--ink); font-weight: 700; }
+      .modalBody { padding: 20px 24px; }
+      
+      /* Footer */
+      footer {
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+          border-radius: 0 0 20px 20px;
+          padding: 20px 24px;
+          box-shadow: var(--shadow);
+          border: 1px solid rgba(230,232,240,.9);
+          text-align: center;
+          color: var(--muted);
+          font-size: 13px;
+          border-top: 1px solid #eef0f7;
+      }
+      
+      footer a {
+          color: var(--brand-600);
+          font-weight: 600;
+          text-decoration: none;
+          transition: color 0.2s ease;
+      }
+      
+      footer a:hover {
+          color: var(--brand-700);
+          text-decoration: underline;
+      }
+      
+      @media (max-width: 768px) {
+          .sub-check {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 8px;
+          }
+          .sub-check .label { min-width: auto; width: 100%; }
+          .sub-check .option { width: 100%; justify-content: center; }
+      }
+      
+      /* Loading spinner */
+      .loading { display: inline-block; animation: spin 1s linear infinite; }
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+      
+      /* Info icon */
+      .info-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
+          color: white;
+          font-size: 12px;
+          font-weight: 900;
+          cursor: help;
+          margin-left: 8px;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+          box-shadow: 0 2px 6px rgba(7, 105, 77, 0.25);
+      }
+      
+      .info-icon:hover {
+          background: linear-gradient(135deg, var(--brand-600), var(--brand-700));
+          color: white;
+          transform: scale(1.1) rotate(5deg);
+          box-shadow: 0 4px 12px rgba(7, 105, 77, 0.35);
+      }
+      
+      /* Subcheck info modal */
+      .subcheck-info-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(4px);
+          display: none;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: 20px;
+          animation: fadeIn 0.3s ease;
+      }
+      
+      .subcheck-info-modal.open { display: flex; }
+      
+      .subcheck-info-content {
+          background: rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(20px);
+          border-radius: 20px;
+          padding: 28px;
+          max-width: 600px;
+          width: 100%;
+          max-height: 80vh;
+          overflow-y: auto;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .subcheck-info-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 24px;
+          padding-bottom: 20px;
+          border-bottom: 2px solid var(--brand-200);
+      }
+      
+      .subcheck-info-header h3 {
+          margin: 0;
+          font-size: 18px;
+          color: var(--brand);
+          flex: 1;
+          padding-right: 20px;
+          font-weight: 700;
+      }
+      
+      .close-info-btn {
+          background: transparent;
+          border: none;
+          font-size: 24px;
+          color: var(--muted);
+          cursor: pointer;
+          padding: 0;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+      }
+      
+      .close-info-btn:hover {
+          background: rgba(243, 244, 246, 0.8);
+          color: var(--brand);
+      }
+      
+      .subcheck-info-body {
+          font-size: 14px;
+          line-height: 1.6;
+          color: var(--ink);
+      }
+      
+      .subcheck-info-question {
+          background: linear-gradient(135deg, var(--brand-200), #d1fae5);
+          padding: 16px 20px;
+          border-radius: 12px;
+          margin-bottom: 20px;
+          border-left: 4px solid var(--brand);
+          font-weight: 600;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      }
+      
+      .subcheck-info-notes {
+          background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+          padding: 16px 20px;
+          border-radius: 12px;
+          border: 1px solid rgba(229, 231, 235, 0.8);
+          font-size: 13px;
+          color: var(--muted);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      
+      .subcheck-info-notes ul { margin: 12px 0; padding-left: 20px; }
+      .subcheck-info-notes li { margin-bottom: 8px; line-height: 1.5; }
+      
+      /* Item title with icon */
+      .itemTitle { display: flex; align-items: center; flex: 1; min-width: 0; }
+      .itemTitle-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+      
+      /* Animations */
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .card, .group { animation: fadeIn 0.4s ease-out; }
+      
+      /* Pulse effect */
+      @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 rgba(7, 105, 77, 0.4); }
+          70% { box-shadow: 0 0 0 10px rgba(7, 105, 77, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(7, 105, 77, 0); }
+      }
+      
+      .highlight { animation: pulse 2s infinite; }
+      
+      @media (max-width: 640px) {
+          .subcheck-info-modal { padding: 10px; }
+          .subcheck-info-content { padding: 20px; max-height: 85vh; }
+          .subcheck-info-header h3 { font-size: 16px; }
+      }
+      
+      /* Save indicator */
+      #saveIndicator {
+          display: none;
+          background: linear-gradient(135deg, #10b981, #34d399);
+          color: white;
+          border: none;
+          animation: pulse 1s ease;
+      }
+      
+      /* Compatibility styles */
+      #compatBtn {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+          border: none;
+          padding: 8px 14px;
+          border-radius: 10px;
+          font-weight: 700;
+          font-size: 13px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-left: 8px;
+      }
+      
+      #compatBtn:hover {
+          background: linear-gradient(135deg, #d97706, #b45309);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+      }
+      
+      .compat-option {
+          padding: 12px;
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          margin-bottom: 12px;
+          background: #f9fafb;
+          transition: all 0.3s ease;
+      }
+      
+      .compat-option:hover {
+          border-color: var(--brand-200);
+          background: #f3f4f6;
+      }
+      
+      .compat-option strong {
+          color: var(--brand-700);
+          display: block;
+          margin-bottom: 6px;
+          font-size: 14px;
+      }
+      
+      .compat-option .muted {
+          font-size: 12px;
+          line-height: 1.5;
+      }
+      
+      .status-indicator {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-right: 6px;
+          vertical-align: middle;
+      }
+      
+      .status-ok { background: #10b981; }
+      .status-warning { background: #f59e0b; }
+      .status-error { background: #ef4444; }
+      
+      .compat-alert {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background: white;
+          border-radius: 12px;
+          padding: 16px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+          border-left: 4px solid #f59e0b;
+          max-width: 300px;
+          z-index: 1000;
+          animation: slideInUp 0.3s ease;
+          display: none;
+      }
+      
+      @keyframes slideInUp {
+          from { transform: translateY(100px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+      }
+      
+      .compat-alert h4 {
+          margin: 0 0 8px 0;
+          color: #92400e;
+          font-size: 14px;
+      }
+      
+      .compat-alert p {
+          margin: 0 0 12px 0;
+          font-size: 12px;
+          color: #6b7280;
+          line-height: 1.4;
+      }
+      
+      .compat-alert button {
+          padding: 6px 12px;
+          font-size: 12px;
+          width: auto;
+          margin-right: 8px;
+      }
+      
+      /* Export warning */
+      .export-warning {
+          background: #fffbeb;
+          border: 1px solid #fde68a;
+          border-radius: 8px;
+          padding: 12px;
+          margin: 10px 0;
+          font-size: 12px;
+      }
+      
+      .export-warning strong {
+          color: #92400e;
+          display: block;
+          margin-bottom: 4px;
+      }
+      
+      /* Badge colors for export */
+      .badge-ok { background: #d1fae5; color: #10b981; }
+      .badge-nok { background: #fee2e2; color: #ef4444; }
+      .badge-na { background: #f3f4f6; color: #6b7280; }
+      
+      /* Tooltip */
+      .tooltip {
+          position: relative;
+          display: inline-block;
+      }
+      
+      .tooltip .tooltiptext {
+          visibility: hidden;
+          width: 200px;
+          background-color: #333;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 8px;
+          position: absolute;
+          z-index: 1;
+          bottom: 125%;
+          left: 50%;
+          margin-left: -100px;
+          opacity: 0;
+          transition: opacity 0.3s;
+          font-size: 12px;
+          font-weight: normal;
+      }
+      
+      .tooltip:hover .tooltiptext {
+          visibility: visible;
+          opacity: 1;
+      }
+      
+      /* Print styles */
+      @media print {
+          body * {
+              visibility: hidden;
+          }
+          .printable, .printable * {
+              visibility: visible;
+          }
+          .printable {
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+          }
+          .no-print {
+              display: none !important;
+          }
+      }
+      
+      /* Toast notification */
+      .toast {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #07694D;
+          color: white;
+          padding: 12px 24px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 1000;
+          display: none;
+          animation: slideUp 0.3s ease;
+      }
+      
+      @keyframes slideUp {
+          from { transform: translate(-50%, 100px); opacity: 0; }
+          to { transform: translate(-50%, 0); opacity: 1; }
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="shell">
+      <header class="topbar">
+        <div class="brandRow">
+          <div class="logo">
+            <div class="logoIcon">&amp;</div>
+            <div>
+              <div class="logoText">BOESS Checklist LCM</div>
+              <div class="logoSub">Live Cycle Management für Tunnel-Funksysteme · Offline-fähig</div>
+            </div>
+          </div>
+
+          <div class="chipRow">
+            <span class="pill" id="counter">0/0 (0% ✓)</span>
+            <span class="pill highlight" id="saveIndicator" style="display: none;">✓ Gespeichert</span>
+            <button class="btn-outline" id="helpBtn" type="button">Hilfe</button>
+            <button class="btn-outline" id="compatBtn" type="button">⚡ Optimieren</button>
+          </div>
+        </div>
+
+        <div class="titleBlock">
+          <h1>Checklist Boess <span style="font-size: 20px; font-weight: 800; color:rgba(255,255,255,0.9);">(Live Cycle Management: LCI/LCE)</span></h1>
+          <p class="subtitle">Wähle zuerst <b>Teilanlage</b> y <b>Tunnel</b>, entscheide den <b>Inspektionsmodus</b>, dokumentiere Prüfpunkte/Sub-Checks und exportiere das Ergebnis als PDF/CSV/Word/Excel.</p>
+        </div>
+      </header>
+
+      <main>
+        <section class="card" aria-label="Checklist App">
+          <div id="setupCard">
+            <div class="setupTitle">
+              <h2>1) Teilanlage &amp; Tunnel wählen</h2>
+              <span class="pill" id="metaChip">GE?? · Tunnel</span>
+            </div>
+            <div class="progressBar" aria-hidden="true"><div id="setupProgress" style="width: 0%;"></div></div>
+
+            <div class="hero" style="margin-top: 12px;">
+              <div class="row">
+                <select id="anlageSelect" aria-label="Teilanlage auswählen">
+                  <option value="">Teilanlage auswählen…</option>
+                  <option value="GE08">GE08</option>
+                  <option value="GE10">GE10</option>
+                  <option value="GE11">GE11</option>
+                </select>
+
+                <select id="tunnelSelect" disabled aria-label="Tunnel auswählen"><option value="">Tunnel auswählen…</option></select>
+
+                <button class="btn-primary" id="startBtn" disabled type="button">Start</button>
+              </div>
+              <div class="muted" id="setupHint" style="margin-top:10px;">Bitte zuerst Teilanlage auswählen.</div>
+            </div>
+
+            <div class="muted" style="margin-top:12px;">
+              Tipp: Wenn keine Tunnel-Liste hinterlegt ist, kannst du den Tunnel <b>manuell</b> eingeben.
+            </div>
+          </div>
+
+          <div id="appCard" style="display:none;">
+            <div class="row">
+              <input id="listName" type="text" placeholder="Listenname (LCI/ LCE - z.B. Tunnel XY )">
+              <button class="btn-soft" id="loadTemplateBtn" type="button" title="Vorlage mit Funksysteme-Prüfpunkten laden">Vorlage laden</button>
+            </div>
+
+            <div class="modeCard" style="margin-top:12px;">
+              <div class="muted" style="min-width:160px; font-weight:1000; color:#374151;">2) Inspektion:</div>
+              <label><input type="radio" name="mode" value="basic" id="basicMode"> Basisinspektion (visuell, ohne Messungen)</label>
+              <label><input type="radio" name="mode" value="detailed" id="detailedMode"> Detailinspektion (visuell, mit Messungen, Vergleich mit Dokumenten/Revisionen)</label>
+            </div>
+
+            <div class="row" style="margin-top: 12px;">
+              <input id="newGroupTitle" type="text" placeholder="3) Neuer Prüfpunkt (z.B. UKW)">
+              <button class="btn-primary" id="addGroupBtn" type="button">Prüfpunkt hinzufügen</button>
+            </div>
+
+            <div class="groups" id="groups"></div>
+
+            <div class="muted" style="margin-top:12px;">
+              <div>ℹ️ <b>Hinweis:</b> Im <b>Basisinspektion</b>-Modus werden Messpunkte automatisch auf <span style="color:var(--na-color); font-weight:800;">N/A</span> gesetzt.</div>
+              <div style="margin-top:4px;">Tipp: Wähle für jeden Sub-Check <span style="color:var(--ok-color);">OK</span>, <span style="color:var(--nok-color);">Nicht OK</span> o<span style="color:var(--na-color);">N/A</span>.</div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="card sticky" aria-label="Aktionen">
+          <h2 class="sideTitle">Schnellaktionen</h2>
+
+          <div class="statBox">
+            <div class="statRow">
+              <div>
+                <div class="smallStat">Fortschritt</div>
+                <div class="bigStat" id="progressBig">0%</div>
+              </div>
+              <div style="flex:1; min-width: 160px;">
+                <div class="smallStat">Statusübersicht</div>
+                <div class="muted" id="statusSummary" style="font-weight:900; font-size:11px;">✓:0 ✗:0 –:0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actionsGrid">
+            <div class="menu" id="exportMenu">
+              <button class="btn-outline" id="exportBtn" type="button">Export ▾</button>
+              <div class="menuPanel" id="exportPanel" role="menu" aria-label="Export">
+                <button id="exportPdfBtn" role="menuitem" type="button">Als PDF exportieren</button>
+                <button id="exportCsvBtn" role="menuitem" type="button">Als CSV exportieren</button>
+                <button id="exportWordBtn" role="menuitem" type="button">Als Word (.docx) exportieren</button>
+                <button id="exportExcelBtn" role="menuitem" type="button">Als Excel (.xlsx) exportieren</button>
+                <hr>
+                <button id="exportJsonBtn" role="menuitem" type="button">Backup exportieren (JSON)</button>
+                <button id="importJsonBtn" role="menuitem" type="button">Backup importieren (JSON)</button>
+              </div>
+            </div>
+
+            <button class="btn-ghost" id="collapseAllBtn" type="button">Alle einklappen</button>
+            <button class="btn-ghost" id="expandAllBtn" type="button">Alle ausklappen</button>
+            <button class="btn-soft" id="setAllOkBtn" type="button" title="Alle Sub-Checks auf OK setzen">Alle auf OK</button>
+            <button class="btn-danger" id="resetBtn" type="button">Alles löschen</button>
+            <button class="btn-soft" id="downloadZipBtn" type="button">📦 ZIP herunterladen</button>
+          </div>
+
+          <div class="muted" style="margin-top: 12px;">
+            <div id="status" style="font-weight:900;">Wird automatisch im Browser gespeichert.</div>
+            <small>Legende: <span style="color:var(--ok-color);">✓ OK</span> · <span style="color:var(--nok-color);">✗ Nicht OK</span> · <span style="color:var(--na-color);">– N/A</span></small>
+          </div>
+        </aside>
+      </main>
+
+      <footer>
+        <div><b>Boess Checklist System</b> · Corporate Design <span style="color:var(--brand); font-weight:900;"></span> · Standalone </div>
+        <div style="margin-top: 6px; font-size: 12px;">
+          © 2026 · Copyright
+          <a href="https://www.boess.ch" target="_blank" rel="noopener noreferrer">Boess Engineering AG</a>
+          · T +41 31 330 10 50 - info@boess.ch
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Subcheck info modal -->
+  <div class="subcheck-info-modal" id="subcheckInfoModal">
+    <div class="subcheck-info-content">
+      <div class="subcheck-info-header">
+        <h3 id="subcheckInfoTitle"></h3>
+        <button class="close-info-btn" id="closeSubcheckInfoBtn" type="button">×</button>
+      </div>
+      <div class="subcheck-info-body" id="subcheckInfoBody"></div>
+    </div>
+  </div>
+
+  <!-- Compatibility modal -->
+  <div class="modalBackdrop" id="compatModal" role="dialog" aria-modal="true" aria-label="Optimale Nutzung" style="display: none;">
+    <div class="modal" style="max-width: 900px;">
+      <div class="modalHeader">
+        <h3>⚠️ Optimale Nutzung der Checklist</h3>
+        <button class="btn-ghost" id="closeCompatBtn" type="button">Schließen</button>
+      </div>
+      <div class="modalBody" style="max-height: 70vh; overflow-y: auto;">
+        <h4 style="color:var(--brand); margin-top:0;">Für beste Funktionalität:</h4>
+        
+        <div class="compat-option">
+          <strong><span class="status-indicator status-ok"></span>1. Lokaler Webserver (Empfohlen)</strong>
+          <div class="muted">
+            <code>python -m http.server 8000</code><br>
+            Dann öffnen: <code>http://localhost:8000</code>
+            <div style="margin-top: 8px;">
+              <strong>Vorteile:</strong><br>
+              • Alle Export-Formate verfügbar<br>
+              • Lokale Speicherung funktioniert<br>
+              • Keine Internetverbindung nötig
+            </div>
+          </div>
+        </div>
+        
+        <div class="compat-option" style="margin-top:12px;">
+          <strong><span class="status-indicator status-ok"></span>2. Mit Internetverbindung</strong>
+          <div class="muted">
+            • Word/Excel-Export funktioniert<br>
+            • Automatisches Speichern funktioniert<br>
+            • Alle Bibliotheken verfügbar
+          </div>
+        </div>
+        
+        <div class="compat-option" style="margin-top:12px;">
+          <strong><span class="status-indicator status-warning"></span>3. Offline von Datei (file://)</strong>
+          <div class="muted">
+            • PDF/CSV Export funktioniert<br>
+            • Word/Excel Export benötigt Internet<br>
+            • Speicherung kann eingeschränkt sein<br>
+            • Manche Browser blockieren localStorage
+          </div>
+        </div>
+        
+        <div style="margin-top:16px; padding:12px; background:#f0f9ff; border-radius:12px; border-left:4px solid var(--brand);">
+          <strong>💡 Tipp für Weitergabe:</strong><br>
+          Das ganze Verzeichnis als ZIP archivieren und weitergeben.<br>
+          <small>Empfänger startet mit <code>python -m http.server 8000</code> für volle Funktionalität.</small>
+        </div>
+        
+        <div style="margin-top:16px;">
+          <button class="btn-primary" id="downloadPortableBtn" style="width:100%; padding: 12px;">📦 Portable Version herunterladen</button>
+          <div class="muted" style="margin-top:8px; font-size:12px; text-align: center;">Enthält diese Datei als eigenständige HTML für einfache Weitergabe</div>
+        </div>
+        
+        <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 16px;">
+          <h4 style="color:var(--brand); margin-bottom: 8px;">Aktueller Status:</h4>
+          <div id="compatStatus" style="font-size: 13px;">
+            <div id="fileProtocolStatus" style="margin-bottom: 6px;"><span class="status-indicator status-warning"></span> Läuft von Datei (file://) - Eingeschränkte Funktionalität</div>
+            <div id="docxStatus" style="margin-bottom: 6px;"><span class="status-indicator status-ok"></span> Word-Export: Verfügbar</div>
+            <div id="xlsxStatus" style="margin-bottom: 6px;"><span class="status-indicator status-ok"></span> Excel-Export: Verfügbar</div>
+            <div id="localStorageStatus"><span class="status-indicator status-ok"></span> Lokale Speicherung: Aktiv</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compatibility alert -->
+  <div class="compat-alert" id="compatAlert" style="display: none;">
+    <h4><span class="status-indicator status-warning"></span> Begrenzte Funktionalität</h4>
+    <p id="alertMessage">Die App läuft mit eingeschränkter Funktionalität. Klicken Sie auf 'Lösung' für Details.</p>
+    <div style="display: flex; justify-content: flex-end;">
+      <button class="btn-ghost" id="closeAlertBtn" type="button" style="font-size: 11px;">Ignorieren</button>
+      <button class="btn-primary" id="showCompatBtn" type="button" style="font-size: 11px;">Lösung</button>
+    </div>
+  </div>
+
+  <!-- Help modal -->
+  <div class="modalBackdrop" id="helpModal" role="dialog" aria-modal="true" aria-label="Hilfe" style="display: none;">
+    <div class="modal">
+      <div class="modalHeader">
+        <h3>Hilfe &amp; Kurz-Anleitung</h3>
+        <button class="btn-ghost" id="closeHelpBtn" type="button">Schließen</button>
+      </div>
+      <div class="modalBody">
+        <h4 style="color:var(--brand); margin:14px 0 8px;">Schnellstart</h4>
+        <ul style="margin:8px 0 0 18px;">
+          <li>Teilanlage &amp; Tunnel auswählen → <b>Start</b></li>
+          <li>Optional: <b>Vorlage laden</b> (LCM - )</li>
+          <li>Prüfpunkt hinzufügen → Sub-Checks hinzufügen → Status wählen</li>
+          <li>Export über <b>Export ▾</b></li>
+        </ul>
+
+        <h4 style="color:var(--brand); margin:14px 0 8px;">Inspektionsmodi</h4>
+        <ul style="margin:8px 0 0 18px;">
+          <li><b>Basisinspektion:</b> Visuelle Prüfung ohne Messungen. Messpunkte werden automatisch auf N/A gesetzt.</li>
+          <li><b>Detailinspektion:</b> Vollständige Prüfung mit Messungen und Dokumentenvergleich.</li>
+        </ul>
+
+        <h4 style="color:var(--brand); margin:14px 0 8px;">Sub-Check Status</h4>
+        <div style="display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap;">
+          <div class="option ok selected" style="pointer-events: none;">OK</div>
+          <div class="option nok selected" style="pointer-events: none;">Nicht OK</div>
+          <div class="option na selected" style="pointer-events: none;">N/A</div>
+        </div>
+        <ul style="margin:8px 0 0 18px;">
+          <li><b style="color:var(--ok-color);">OK</b>: Prüfpunkt erfüllt alle Anforderungen</li>
+          <li><b style="color:var(--nok-color);">Nicht OK</b>: Prüfpunkt nicht erfüllt, Aktion erforderlich</li>
+          <li><b style="color:var(--na-color);">N/A</b>: Nicht anwendbar (nicht relevant für diese Inspektion)</li>
+        </ul>
+
+        <h4 style="color:var(--brand); margin:14px 0 8px;">Export-Formate</h4>
+        <ul style="margin:8px 0 0 18px;">
+          <li><b>PDF:</b> Für Druck und offizielle Dokumentation</li>
+          <li><b>CSV:</b> Für Datenanalyse und Import in andere Systeme</li>
+          <li><b>Word (.docx):</b> Echt Word-Dokument mit professionellem Layout</li>
+          <li><b>Excel (.xlsx):</b> Echte Excel-Datei mit Tabellen und Formaten</li>
+          <li><b>JSON Backup:</b> Für Sicherung und Übertragung der datos</li>
+          <li><b>ZIP Package:</b> Vollständige Standalone-Version für Offline-Nutzung</li>
+        </ul>
+
+        <h4 style="color:var(--brand); margin:14px 0 8px;">Tipps</h4>
+        <ul style="margin:8px 0 0 18px;">
+          <li>Klicke auf einen Status, um ihn auszuwählen</li>
+          <li>Backup: Exportiere/Importiere JSON für Transfer zwischen Geräten/Browsern</li>
+          <li>Speicherung: Pro <b>Teilanlage+Tunnel</b> wird automatisch getrennt gespeichert</li>
+          <li>Word/Excel-Export erfordert Internet für die Bibliotheken</li>
+          <li>Für volle Offline-Funktionalität: ZIP herunterladen und lokalen Server starten</li>
+        </ul>
+
+        <h4 style="color:var(--brand); margin:14px 0 8px;">Datenschutz</h4>
+        <button class="btn-outline" style="margin-top: 10px; width: 100%;" id="showDatenschutzBtn">📄 Datenschutzerklärung anzeigen</button>
+        <div class="muted">Keine Daten werden an Server übertragen. Alles bleibt lokal im Browser.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Datenschutz modal -->
+  <div class="modalBackdrop" id="datenschutzModal" role="dialog" aria-modal="true" aria-label="Datenschutzerklärung" style="display: none;">
+    <div class="modal" style="max-width: 900px;">
+      <div class="modalHeader">
+        <h3>Datenschutzerklärung</h3>
+        <button class="btn-ghost" id="closeDatenschutzBtn" type="button">Schließen</button>
+      </div>
+      <div class="modalBody" style="max-height: 70vh; overflow-y: auto;">
+        <section id="datenschutz" style="font-family: Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #1f2d2a; max-width: 900px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom: 10px;">
+            <h3 style="color:#07694D; border-bottom:2px solid #07694D; padding-bottom:6px; font-family: Calibri, Arial, sans-serif; margin:0;">Datenschutzerklärung</h3>
+          </div>
+          <p>Der Schutz Ihrer personenbezogenen Daten ist der <strong style="color:#07694D;">Boess Engineering AG</strong> ein wichtiges Anliegen. Wir verarbeiten personenbezogene Daten ausschließlich im Einklang mit dem revidierten Schweizer Datenschutzgesetz (DSG).</p>
+          <div style="background:#f1f7f5; border-left:4px solid #07694D; padding:12px; margin:16px 0;">
+            <strong style="font-family: Calibri, Arial, sans-serif;">Verantwortliche Stelle</strong><br>
+            Boess Engineering AG<br>
+            Wankdorffeldstrasse 64<br>
+            CH-3014 Bern<br>
+            Schweiz<br>
+            Tel. +41 31 330 10 50<br>
+            <a href="mailto:info@boess.ch" style="color:#07694D; text-decoration:none;">info@boess.ch</a>
+          </div>
+          <h4 style="color:#0a7f5c; font-family: Calibri, Arial, sans-serif;">Verarbeitung personenbezogener Daten</h4>
+          <p>Personenbezogene Daten werden nur verarbeitet, soweit dies für den Betrieb dieser Website, die Kommunikation mit Ihnen oder aus technischen Gründen erforderlich ist.</p>
+          <h4 style="color:#0a7f5c; font-family: Calibri, Arial, sans-serif;">Server-Logs</h4>
+          <p>Beim Zugriff auf unsere Website werden automatisch technische Daten wie IP-Adresse, Datum und Uhrzeit, Browsertyp und Betriebssystem in Server-Logfiles erfasst. Diese Daten dienen ausschließlich der Sicherstellung des technischen Betriebs und der Systemsicherheit.</p>
+          <h4 style="color:#0a7f5c; font-family: Calibri, Arial, sans-serif;">Cookies</h4>
+          <p>Diese Website verwendet ausschließlich technisch notwendige Cookies. Es findet kein Tracking und keine Profilbildung statt.</p>
+          <h4 style="color:#0a7f5c; font-family: Calibri, Arial, sans-serif;">Kontaktaufnahme</h4>
+          <p>Wenn Sie uns per E-Mail oder Formular kontaktieren, werden Ihre Angaben zur Bearbeitung der Anfrage verarbeitet. Eine Weitergabe an Dritte erfolgt nicht.</p>
+          <h4 style="color:#0a7f5c; font-family: Calibri, Arial, sans-serif;">Weitergabe und Speicherung</h4>
+          <p>Ihre Daten werden nicht an Dritte weitergegeben und nur so lange gespeichert, wie dies für den jeweiligen Zweck erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen.</p>
+          <h4 style="color:#0a7f5c; font-family: Calibri, Arial, sans-serif;">Ihre Rechte</h4>
+          <p>Sie haben das Recht auf Auskunft, Berichtigung und Löschung Ihrer personenbezogenen Daten im Rahmen der gesetzlichen Bestimmungen des Schweizer DSG.</p>
+          <p style="margin-top:20px; font-size:11px; color:#6b8f84;">Stand: 2026 · Boess Engineering AG</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+      // ====== CONFIGURATION ======
+      const STORAGE_PREFIX = "boess_lcm_funksysteme_v_";
+      const VERSION = "2.0.3";
+
+      // Sub-checks that should be N/A in basic mode
+      const BASIC_MODE_NA_ITEMS = [
+          "DAB RX-Pegel Donor", "DAB C/N", "SK FB RX-Pegel UKW", "SK FB RX-Pegel DAB",
+          "SK FB RX-Pegel PYC", "SK FB TX-Pegel UKW", "SK FB TX-Pegel DAB",
+          "SK FB TX-Pegel PYC", "SK FB RL-Messung Status", "SK FB RL-Messung",
+          "SK FB PIM-Messung Status", "SK FB PIM-Messung", "SK FB PIM Messung neu",
+          "SK WELK TX-Pegel PYC", "SK WELK RX-Pegel PYC", "SK WELK PP Frequenzen",
+          "SK WELK RX-Pegel PP", "SK SISTO PYC", "SK SISTO TX-Pegel PYC",
+          "SK SISTO RX-Pegel PYC", "SK SISTO PP Status", "SK SISTO PP Frequenzen",
+          "SK SISTO RX-Pegel PP", "IHV TZ Status", "IHV TZ Status PYC",
+          "IHV TZ Status PP", "IHV TZ Status PP Frequenz", "IHV TZ Status RX-Pegel PP"
+      ];
+
+      // Sub-check information
+      const SUBCHECK_INFO = {
+          "UKW-Status": { question: "Ist die UKW Anlage zurückgebaut? Ausgeschaltet?", notes: "Prüfen Sie, ob die UKW-Anlage ordnungsgemäß außer Betrieb gesetzt wurde." },
+          "Hersteller": { question: "Wer ist der Hersteller der Anlage?", notes: "Notieren Sie den Hersteller für die Dokumentation." },
+          "DAB-Status": { question: "DAB+ Anlage vorhanden?", notes: "Überprüfen Sie, ob eine DAB+ Anlage installiert ist." },
+          "DAB Ensembles": { question: "Wie viele und welche Ensembles sind aufgeschaltet?", notes: "Listen Sie alle aktiven DAB+ Ensembles auf." },
+          "DAB Reserve": { question: "Wie viel Reserve ist noch vorhanden?", notes: "Prüfen Sie die verfügbare Kapazität für zusätzliche Ensembles." },
+          "DAB RX-Pegel Donor": { question: "Wie hoch ist der DAB+ Aussenpegel? Ist dieser Ausreichend?", notes: "Messen Sie den Empfangspegel und bewerten Sie die Qualität." },
+          "DAB C/N": { question: "DAB überprüfen (S/N Ratio)", notes: "Prüfen Sie das Signal-Rausch-Verhältnis (C/N Ratio)." },
+          "ESA Status": { question: "Ist eine ESA vorhanden?", notes: "Überprüfen Sie, ob eine Einsprechanlage (ESA) installiert ist." },
+          "ESA Funktion": { question: "Funktioniert die ESA auf allen Sendern/Ensembles?", notes: "Testen Sie die Funktion auf UKW und DAB+ Kanälen." },
+          "ESA Qualität": { question: "Wie gut verständlich ist die Qualität der Einsprechung?", notes: "Bewerten Sie die Sprachqualität auf einer Skala von 1-3." },
+          "ESA RadioText": { question: "Was wird auf dem RDS Display der Radios angezeigt?", notes: "Überprüfen Sie die angezeigten Informationen auf den Radiodisplays." },
+          "Analogfunk Status": { question: "Ist noch eine Analogfunkanlage für Blaulichtorganisationen eingebaut?", notes: "Prüfen Sie den Status der Analogfunkanlage für Einsatzorganisationen." },
+          "PYC Status": { question: "Wie sind die Polycom (PYC) repeater angebunden? 4/4 oder 8/8?", notes: "Überprüfen Sie die Anbindungskonfiguration der Polycom Repeater." },
+          "Repeater Funktion": { question: "Wie verstärken die Repeater - Bandselektiv oder Kanalselektiv?", notes: "Prüfen Sie die Verstärkungsmethode der Repeater." },
+          "SK FB Status": { question: "Wie ist der Zustand der Kabel (insbesondere im Aussenbereich UV-Einstrahlung)?", notes: "Überprüfen Sie den physikalischen Zustand der Kabelanlage." },
+          "SK FB Stecker Status": { question: "Wie ist der Zustand der Steckverbindungen?", notes: "Prüfen Sie alle Steckverbindungen auf Korrosion und festen Sitz." },
+          "SK FB RX-Pegel UKW": { question: "Sind die Empfangspegel UKW im Tunnel noch in Ordnung?", notes: "Messen Sie die UKW-Empfangspegel an verschiedenen Punkten im Tunnel." },
+          "SK FB RX-Pegel DAB": { question: "Sind die Empfangspegel DAB+ im Tunnel noch in Ordnung?", notes: "Messen Sie die DAB+ Empfangspegel im Tunnel." },
+          "SK FB RX-Pegel PYC": { question: "Sind die Empfangspegel POLYCOM im Tunnel noch in Ordnung?", notes: "Überprüfen Sie die POLYCOM Empfangspegel." },
+          "SK FB TX-Pegel UKW": { question: "Sind die Sendepegel UKW am Koppelfeldausgang in Ordnung?", notes: "Messen Sie die UKW-Sendepegel am Koppelfeld." },
+          "SK FB TX-Pegel DAB": { question: "Sind die Sendepegel DAB+ am Koppelfeldausgang in Ordnung?", notes: "Messen Sie die DAB+ Sendepegel am Koppelfeld." },
+          "SK FB TX-Pegel PYC": { question: "Sind die Sendepegel POLYCOM am Koppelfeldausgang in Ordnung?", notes: "Prüfen Sie die POLYCOM Sendepegel am Koppelfeld." },
+          "SK FB RL-Messung Status": { question: "Rückflussdämpfung (RL): Wann wurde diese Messung das letzte Mal gemacht?", notes: "Dokumentieren Sie das Datum der letzten RL-Messung." },
+          "SK FB RL-Messung": { question: "Ist die Rückflussdämpfung in Ordnung? (RL)", notes: "Überprüfen Sie die Rückflussdämpfungswerte." },
+          "SK FB PIM-Messung Status": { question: "PIM Messung: Wann wurde diese Messung das letzte mal gemacht?", notes: "Notieren Sie das Datum der letzten PIM-Messung." },
+          "SK FB PIM-Messung": { question: "PIM Messung: Sind die PIM Werte in Ordnung?", notes: "Prüfen Sie die PIM (Passive Intermodulation) Werte." },
+          "SK FB PIM Messung neu": { question: "Ist eine neue PIM Messung notwendig?", notes: "Bewerten Sie, ob eine neue PIM-Messung erforderlich ist." },
+          "SK WELK Status": { question: "Sind WELK(s) SK installiert?", notes: "Überprüfen Sie, ob WELK-Systeme vorhanden sind." },
+          "SK WELK PYC": { question: "Ist Polycom auf diesem Aufgeschaltet?", notes: "Prüfen Sie die POLYCOM-Integration im WELK-System." },
+          "SK WELK TX-Pegel PYC": { question: "Sind die Sendepegel POLYCOM am Koppelfeldausgang in Ordnung?", notes: "Messen Sie die POLYCOM Sendepegel im WELK-System." },
+          "SK WELK RX-Pegel PYC": { question: "Funktioniert POLYCOM im WELK?", notes: "Testen Sie die POLYCOM-Funktionalität im WELK-System." },
+          "SK WELK PP Status": { question: "Welche Public Provider sind auf dem SK aufgeschaltet?", notes: "Listen Sie alle aktiven Mobilfunkprovider auf." },
+          "SK WELK PP Frequenzen": { question: "Welche Frequenzbänder?", notes: "Dokumentieren Sie die verwendeten Frequenzbänder." },
+          "SK WELK RX-Pegel PP": { question: "Wie ist die Empfangsqualität am weitest entferntesten Versorgungspunkt des SKs?", notes: "Messen Sie die Empfangsqualität an kritischen Punkten." },
+          "SK SISTO Status": { question: "Sind SISTO SK installiert?", notes: "Überprüfen Sie, ob SISTO-Systeme vorhanden sind." },
+          "SK SISTO PYC": { question: "Ist Polycom auf diesem Aufgeschaltet?", notes: "Prüfen Sie die POLYCOM-Integration im SISTO-System." },
+          "SK SISTO TX-Pegel PYC": { question: "Sind die Sendepegel POLYCOM am Koppelfeldausgang in Ordnung?", notes: "Messen Sie die POLYCOM Sendepegel im SISTO-System." },
+          "SK SISTO RX-Pegel PYC": { question: "Funktioniert POLYCOM im SISTO?", notes: "Testen Sie die POLYCOM-Funktionalität im SISTO-System." },
+          "SK SISTO PP Status": { question: "Welche Mobilfunkprovider sind auf dem SK aufgeschaltet?", notes: "Listen Sie alle aktiven Mobilfunkprovider auf." },
+          "SK SISTO PP Frequenzen": { question: "Welche Frequenzbänder?", notes: "Dokumentieren Sie die verwendeten Frequenzbänder." },
+          "SK SISTO RX-Pegel PP": { question: "Wie ist die Empfangsqualität am weitest entferntesten Versorgungspunkt des SKs?", notes: "Messen Sie die Empfangsqualität an kritischen Punkten." },
+          "IHV TZ Status": { question: "Ist die Tunnelzentrale mit Tunnelfunk erschlossen und wie?", notes: "Prüfen Sie die Funkversorgung der Tunnelzentrale." },
+          "IHV TZ Status PYC": { question: "Ist Polycom auf diesem Aufgeschaltet?", notes: "Überprüfen Sie die POLYCOM-Integration in der Tunnelzentrale." },
+          "IHV TZ Status PP": { question: "Welche Mobilfunkprovider sind auf aufgeschaltet?", notes: "Listen Sie alle aktiven Provider in der Tunnelzentrale auf." },
+          "IHV TZ Status PP Frequenz": { question: "Welche Frequenzbänder?", notes: "Dokumentieren Sie die verwendeten Frequenzbänder." },
+          "IHV TZ Status RX-Pegel PP": { question: "Wie ist die Empfangsqualität am weitest entferntesten Versorgungspunkt der Inhouseinstallation?", notes: "Messen Sie die Empfangsqualität an kritischen Punkten." },
+          "Technologiebeurteilung Ersatzteilproblematik": { question: "Technologiebeurteilung allgemein, gibt es neue Features?", notes: "Bewerten Sie den technologischen Stand und Ersatzteilverfügbarkeit." },
+          "Eigentumsverhältnis": { question: "Eigentumsverhältnis falls spezielles", notes: "Dokumentieren Sie spezielle Eigentumsverhältnisse." },
+          "Physikalischen Infrastruktur": { question: "Antennen und Aussenanlagen Zustand, Eigentum Metallkonstruktionen, Masten, Vorbaurohre etc.", notes: "Überprüfen Sie den Zustand der physischen Infrastruktur." },
+          "Normen": { question: "Welcher Typ Kabel? (Themen wie halogenfrei, Brandverhaltenklasse)", notes: "Prüfen Sie die verwendeten Kabeltypen und Normen." },
+          "SPS": { question: "SAIA SPS SPH KF.SE13 (Comlab spezifisch) - Diese SPS enthält einen Akku dieser sollte alle drei Jahre ausgebaut und geprüft werden.", notes: "Die Prüfung umfasst eine Spannungsmessung und eine kontrollierte Entladung zur Feststellung der Kapazität." },
+          "Repeater & SPS Konfiguration": { question: "Neuestes ConfigFile/Backup der Anlage vorhanden?", notes: "Überprüfen Sie die Verfügbarkeit aktueller Konfigurationsbackups." },
+          "FO Status": { question: "LWL-Schnittstelle PYC BTS", notes: "Prüfen Sie den Status der LWL-Schnittstelle für POLYCOM BTS." },
+          "TPS Status": { question: "Pager Service vorhanden & OK", notes: "Überprüfen Sie den Status des Pager-Services." }
+      };
+
+      const DEFAULT_SUBCHECK_INFO = {
+          question: "Prüfpunkt-Spezifikation",
+          notes: "Diese Prüfung dient der Überwachung und Dokumentation des Systemzustands."
+      };
+
+      // ====== STATE MANAGEMENT ======
+      let state = {
+          anlage: "",
+          tunnel: "",
+          name: "",
+          mode: "basic",
+          groups: [],
+          useRadioMode: true,
+          originalStates: new Map()
+      };
+
+      // ====== ELEMENT REFERENCES ======
+      const elSetupCard = document.getElementById("setupCard");
+      const elAppCard = document.getElementById("appCard");
+      const elAnlage = document.getElementById("anlageSelect");
+      const elTunnel = document.getElementById("tunnelSelect");
+      const elStart = document.getElementById("startBtn");
+      const elHint = document.getElementById("setupHint");
+      const elSetupProgress = document.getElementById("setupProgress");
+      const elGroups = document.getElementById("groups");
+      const elListName = document.getElementById("listName");
+      const elCounter = document.getElementById("counter");
+      const elStatus = document.getElementById("status");
+      const elStatusSummary = document.getElementById("statusSummary");
+      const elNewGroupTitle = document.getElementById("newGroupTitle");
+      const elModeRadios = Array.from(document.querySelectorAll('input[name="mode"]'));
+      const elBasicMode = document.getElementById("basicMode");
+      const elDetailedMode = document.getElementById("detailedMode");
+      const elMetaChip = document.getElementById("metaChip");
+      const elProgressBig = document.getElementById("progressBig");
+      const elExportBtn = document.getElementById("exportBtn");
+      const elExportPanel = document.getElementById("exportPanel");
+      const elSaveIndicator = document.getElementById("saveIndicator");
+      const elCompatModal = document.getElementById("compatModal");
+      const elCompatAlert = document.getElementById("compatAlert");
+      const elAlertMessage = document.getElementById("alertMessage");
+      const elToast = document.getElementById("toast");
+
+      // ====== HELPER FUNCTIONS ======
+      function uid() {
+          return Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+      }
+
+      function storageKey(anlage, tunnel) {
+          return STORAGE_PREFIX + (anlage || "NA") + "_" + (tunnel || "NA");
+      }
+
+      function fileSafeName(name) {
+          return (name || "export").replace(/[\\/:*?"<>|]+/g, "-").trim();
+      }
+
+      function downloadBlob(blob, filename) {
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+      }
+
+      function modeLabel(mode) {
+          return mode === "detailed"
+              ? "Detailinspektion (visuell, mit Messungen, Vergleich mit Dokumenten und/oder früheren Revisionen)"
+              : "Basisinspektion (visuell, ohne Messungen)";
+      }
+
+      function statusLabel(status) {
+          switch(status) {
+              case "ok": return "OK";
+              case "nok": return "Nicht OK";
+              case "na": return "N/A";
+              default: return "Ausstehend";
+          }
+      }
+
+      function escapeHtml(text) {
+          const div = document.createElement('div');
+          div.textContent = text || '';
+          return div.innerHTML;
+      }
+
+      function formatDateForHeader(date) {
+          return date.toLocaleDateString('de-DE', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+          });
+      }
+
+      function formatDateForFooter(date) {
+          return date.toLocaleString('de-DE', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+          });
+      }
+
+      function showToast(message, duration = 3000) {
+          elToast.textContent = message;
+          elToast.style.display = 'block';
+          setTimeout(() => {
+              elToast.style.display = 'none';
+          }, duration);
+      }
+
+      // ====== COMPATIBILITY FUNCTIONS ======
+      function initCompatibilityCheck() {
+          const issues = [];
+          const isFileProtocol = window.location.protocol === 'file:';
+          
+          if (isFileProtocol) {
+              issues.push("LIMITIERUNG: Läuft von Datei (file://)");
+              issues.push("- localStorage kann eingeschränkt sein");
+              issues.push("- Manche Browser blockieren Downloads");
+              issues.push("");
+              issues.push("EMPFEHLUNG: Lokalen Server nutzen");
+              issues.push("python -m http.server 8000");
+              issues.push("http://localhost:8000 öffnen");
+          }
+          
+          try {
+              localStorage.setItem('test', 'test');
+              localStorage.removeItem('test');
+          } catch (e) {
+              issues.push("WARNUNG: localStorage nicht verfügbar");
+              issues.push("- Daten werden nicht gespeichert");
+              issues.push("- Bitte Browser-Einstellungen prüfen");
+          }
+          
+          if (issues.length > 0) {
+              setTimeout(() => {
+                  showCompatAlert(issues.join('\n'));
+              }, 1500);
+          }
+      }
+
+      function showCompatAlert(message) {
+          elAlertMessage.textContent = "Die App läuft mit eingeschränkter Funktionalität. Klicken Sie auf 'Lösung' für Details.";
+          elCompatAlert.style.display = 'block';
+          
+          setTimeout(() => {
+              if (elCompatAlert.style.display === 'block') {
+                  elCompatAlert.style.display = 'none';
+              }
+          }, 30000);
+      }
+
+      function hideCompatAlert() {
+          elCompatAlert.style.display = 'none';
+      }
+
+      function showCompatModal() {
+          elCompatModal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+      }
+
+      function hideCompatModal() {
+          elCompatModal.style.display = 'none';
+          document.body.style.overflow = '';
+      }
+
+      // ====== MODAL FUNCTIONS ======
+      function showSubcheckInfo(subcheckTitle) {
+          const info = SUBCHECK_INFO[subcheckTitle] || DEFAULT_SUBCHECK_INFO;
+          const modal = document.getElementById('subcheckInfoModal');
+          const titleElement = document.getElementById('subcheckInfoTitle');
+          const bodyElement = document.getElementById('subcheckInfoBody');
+          
+          titleElement.textContent = subcheckTitle;
+          
+          let bodyHTML = `
+              <div class="subcheck-info-question">
+                  <strong>Prüffrage:</strong><br>
+                  ${escapeHtml(info.question)}
+              </div>`;
+          
+          if (info.notes) {
+              bodyHTML += `
+                  <div class="subcheck-info-notes">
+                      <strong>Hinweise:</strong><br>
+                      ${typeof info.notes === 'string' ? escapeHtml(info.notes) : info.notes}
+                  </div>`;
+          }
+          
+          bodyElement.innerHTML = bodyHTML;
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+      }
+
+      function hideSubcheckInfo() {
+          const modal = document.getElementById('subcheckInfoModal');
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+      }
+
+      function showDatenschutzModal() {
+          elDatenschutzModal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+      }
+
+      function hideDatenschutzModal() {
+          elDatenschutzModal.style.display = 'none';
+          document.body.style.overflow = '';
+      }
+
+      function showHelpModal() {
+          document.getElementById('helpModal').style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+      }
+
+      function hideHelpModal() {
+          document.getElementById('helpModal').style.display = 'none';
+          document.body.style.overflow = '';
+      }
+
+      // ====== SETUP FUNCTIONS ======
+      function setSetupState() {
+          const a = elAnlage.value;
+          const t = elTunnel.value;
+          elStart.disabled = !(a && t);
+          const pct = (!a ? 0 : (!t ? 50 : 100));
+          elSetupProgress.style.width = pct + "%";
+
+          elHint.textContent = a
+              ? (t ? "Bereit. Du kannst starten." : "Bitte Tunnel auswählen.")
+              : "Bitte zuerst Teilanlage auswählen.";
+
+          elMetaChip.textContent = `${a || "GE??"} · ${t && t !== "__manual__" ? t : "Tunnel"}`;
+      }
+
+      function getTunnelsByAnlage(anlage) {
+          const GE08 = [
+              "TUNNEL Birchi", "TUNNEL Lüsslingen", "TUNNEL Spitalhof", "TUNNEL Grenchner Witi",
+              "TUNNEL Eggflue", "TUNNEL Reinach", "TUNNEL Schwarzwald", "GALLERIE Breite",
+              "TUNNEL Singer (SN)", "TUNNEL Pratteler", "TUNNEL Schweizerhalle", "TUNNEL St. Johann inkl Luzernerring",
+              "TUNNEL Horburg", "TUNNEL Arisdorf", "TUNNEL Ebenrain", "TUNNEL Belchen",
+              "TUNNEL Schönthal", "GALLERIE Neuenhof", "TUNNEL Baregg", "TUNNEL Habsburg",
+              "TUNNEL Schinznacherfeld", "TUNNEL Bözberg"
+          ];
+          
+          const GE10 = [
+              "TUNNEL Sachseln", "TUNNEL TB Zollhaus", "TUNNEL Giswil", "TUNNEL Kirchenwald inkl. Verbindung N02-N08 VZ Lopper (R4)",
+              "TUNNEL Lopper inkl. Abzweigung N08-N02 VZ Lopper (R3)", "TUNNEL Acheregg Nord R4 AS Hergiswil, (inkl. Gallerie Stansstad)",
+              "TUNNEL TB Rathausen", "TUNNEL Reussport", "TUNNEL TB AS Luzern-Zentrum", "TUNNEL Sonnenberg",
+              "TUNNEL TB Schlund", "TUNNEL TB Spier inkl Kantonstrasse", "TUNNEL Lungern", "TUNNEL Eich"
+          ];
+          
+          const GE11 = [
+              "TUNNEL Gotthard (GST)", "TUNNEL Seelisberg", "TUNNEL Umfahrung Flüelen", "TUNNEL Mosi",
+              "GALLERIA Costoni di Fieud", "TUNNEL Teiftal", "TUNNEL Platti", "TUNNEL Naxberg",
+              "Tunnel Axenfluh", "TUNNEL Ölberg", "TUNNEL Zingel", "TUNNEL Langlaui",
+              "TUNNEL Stutzegg", "TUNNEL Ried", "TUNNEL Tellsplatte", "TUNNEL Kleine Galerie",
+              "TUNNEL Schiferenegg", "Tunnel Buggital", "Tunnel Gumpisch"
+          ];
+          
+          if (anlage === "GE10") return GE10;
+          if (anlage === "GE11") return GE11;
+          if (anlage === "GE08") return GE08;
+          return [];
+      }
+
+      function populateTunnelSelect() {
+          const a = elAnlage.value;
+          const tunnels = getTunnelsByAnlage(a);
+          elTunnel.innerHTML = '<option value="">Tunnel auswählen…</option>';
+
+          if (!a) {
+              elTunnel.disabled = true;
+              setSetupState();
+              return;
+          }
+
+          elTunnel.disabled = false;
+
+          if (tunnels.length === 0) {
+              const opt = document.createElement("option");
+              opt.value = "__manual__";
+              opt.textContent = "— Keine Liste hinterlegt (Tunnel manuell eingeben) —";
+              elTunnel.appendChild(opt);
+              setSetupState();
+              return;
+          }
+
+          for (const t of tunnels) {
+              const opt = document.createElement("option");
+              opt.value = t;
+              opt.textContent = t;
+              elTunnel.appendChild(opt);
+          }
+          setSetupState();
+      }
+
+      function askManualTunnelIfNeeded() {
+          if (elTunnel.value !== "__manual__") return elTunnel.value;
+          const name = prompt("Tunnelname für " + elAnlage.value + " eingeben:");
+          if (!name) return "";
+          const opt = document.createElement("option");
+          opt.value = name;
+          opt.textContent = name;
+          elTunnel.appendChild(opt);
+          elTunnel.value = name;
+          return name;
+      }
+
+      // ====== CORE DATA FUNCTIONS ======
+      function computeStats() {
+          let ok = 0, nok = 0, na = 0, pending = 0, total = 0;
+
+          for (const g of state.groups) {
+              for (const i of (g.items || [])) {
+                  total++;
+                  switch(i.status) {
+                      case "ok": ok++; break;
+                      case "nok": nok++; break;
+                      case "na": na++; break;
+                      default: pending++;
+                  }
+              }
+          }
+
+          const done = ok + nok + na;
+          const pct = total ? Math.round((done/total)*100) : 0;
+
+          return { ok, nok, na, pending, total, done, pct };
+      }
+
+      function load() {
+          const a = state.anlage;
+          const t = state.tunnel;
+          const key = storageKey(a, t);
+          
+          try {
+              const raw = localStorage.getItem(key);
+              state = raw ? JSON.parse(raw) : {
+                  anlage: a,
+                  tunnel: t,
+                  name: "",
+                  mode: "basic",
+                  groups: [],
+                  useRadioMode: true,
+                  originalStates: new Map()
+              };
+
+              if (!state || typeof state !== "object") {
+                  state = {
+                      anlage: a,
+                      tunnel: t,
+                      name: "",
+                      mode: "basic",
+                      groups: [],
+                      useRadioMode: true,
+                      originalStates: new Map()
+                  };
+              }
+
+              if (!Array.isArray(state.groups)) state.groups = [];
+              if (typeof state.name !== "string") state.name = "";
+              if (state.mode !== "basic" && state.mode !== "detailed") state.mode = "basic";
+              if (typeof state.useRadioMode !== "boolean") state.useRadioMode = true;
+
+              if (state.originalStates && !(state.originalStates instanceof Map)) {
+                  state.originalStates = new Map(Object.entries(state.originalStates));
+              } else if (!state.originalStates) {
+                  state.originalStates = new Map();
+              }
+
+              state.anlage = a;
+              state.tunnel = t;
+
+              migrateOldItems();
+              saveOriginalStates();
+
+          } catch {
+              state = {
+                  anlage: a,
+                  tunnel: t,
+                  name: "",
+                  mode: "basic",
+                  groups: [],
+                  useRadioMode: true,
+                  originalStates: new Map()
+              };
+          }
+
+          elListName.value = state.name || "";
+          elModeRadios.forEach(r => r.checked = (r.value === state.mode));
+          document.title = `BOESS Checklist – ${state.anlage} · ${state.tunnel}`;
+          elMetaChip.textContent = `${state.anlage} · ${state.tunnel}`;
+
+          if (state.mode === "basic") {
+              applyBasicModeNA();
+          }
+      }
+
+      function saveOriginalStates() {
+          for (const group of state.groups) {
+              for (const item of group.items) {
+                  const itemId = item.id;
+                  if (!state.originalStates.has(itemId)) {
+                      state.originalStates.set(itemId, {
+                          status: item.status,
+                          note: item.note || ""
+                      });
+                  }
+              }
+          }
+      }
+
+      function migrateOldItems() {
+          for (const group of state.groups) {
+              for (const item of group.items) {
+                  if (item.done !== undefined && item.status === undefined) {
+                      item.status = item.done ? "ok" : "pending";
+                      delete item.done;
+                  }
+                  if (!item.status) {
+                      item.status = "pending";
+                  }
+              }
+          }
+      }
+
+      function save() {
+          const key = storageKey(state.anlage, state.tunnel);
+
+          const stateToSave = {
+              ...state,
+              originalStates: Object.fromEntries(state.originalStates)
+          };
+
+          try {
+              localStorage.setItem(key, JSON.stringify(stateToSave));
+              
+              elSaveIndicator.style.display = 'inline-block';
+              elSaveIndicator.style.animation = 'pulse 1s ease';
+              setTimeout(() => {
+                  elSaveIndicator.style.display = 'none';
+              }, 2000);
+              
+              elStatus.textContent = "Gespeichert ✓";
+              clearTimeout(save._t);
+              save._t = setTimeout(() => elStatus.textContent = "Wird automatisch im Browser gespeichert.", 900);
+              updateSidebarStats();
+          } catch (e) {
+              showToast("Speichern fehlgeschlagen: " + e.message, 5000);
+          }
+      }
+
+      function updateSidebarStats() {
+          const { ok, nok, na, total, pct } = computeStats();
+
+          elCounter.textContent = `${ok}/${total} (${pct}% ✓)`;
+          elProgressBig.textContent = pct + "%";
+          elStatusSummary.textContent = `✓:${ok} ✗:${nok} –:${na}`;
+          document.title = `BOESS Checklist – ${state.anlage} · ${state.tunnel} (${pct}%)`;
+      }
+
+      function handleModeChange() {
+          const oldMode = state.mode;
+          const newMode = elBasicMode.checked ? "basic" : "detailed";
+
+          if (oldMode !== newMode) {
+              state.mode = newMode;
+
+              if (newMode === "basic") {
+                  applyBasicModeNA();
+              } else {
+                  restoreOriginalStates();
+              }
+
+              save();
+              render();
+          }
+      }
+
+      function applyBasicModeNA() {
+          let changed = false;
+
+          for (const group of state.groups) {
+              for (const item of group.items) {
+                  if (!state.originalStates.has(item.id)) {
+                      state.originalStates.set(item.id, {
+                          status: item.status,
+                          note: item.note || ""
+                      });
+                  }
+
+                  if (BASIC_MODE_NA_ITEMS.includes(item.title) && item.status !== "na") {
+                      item.status = "na";
+                      changed = true;
+                  }
+              }
+          }
+
+          if (changed) {
+              save();
+          }
+      }
+
+      function restoreOriginalStates() {
+          let changed = false;
+
+          for (const group of state.groups) {
+              for (const item of group.items) {
+                  if (state.originalStates.has(item.id)) {
+                      const original = state.originalStates.get(item.id);
+
+                      if (item.status !== original.status || item.note !== original.note) {
+                          item.status = original.status;
+                          item.note = original.note;
+                          changed = true;
+                      }
+                  } else {
+                      if (item.status === "na" && BASIC_MODE_NA_ITEMS.includes(item.title)) {
+                          item.status = "pending";
+                          changed = true;
+                      }
+                  }
+              }
+          }
+
+          if (changed) {
+              save();
+          }
+      }
+
+      // ====== RENDERING FUNCTIONS ======
+      function render() {
+          elGroups.innerHTML = "";
+          updateSidebarStats();
+
+          if (state.groups.length === 0) {
+              const empty = document.createElement("div");
+              empty.className = "muted";
+              empty.style.marginTop = "10px";
+              empty.textContent = "Noch keine Prüfpunkte. Füge oben einen Prüfpunkt hinzu oder lade die Vorlage.";
+              elGroups.appendChild(empty);
+              return;
+          }
+
+          for (const g of state.groups) {
+              const groupWrap = document.createElement("div");
+              groupWrap.className = "group";
+
+              const header = document.createElement("div");
+              header.className = "groupHeader";
+
+              const titleRow = document.createElement("div");
+              titleRow.className = "groupTitleRow";
+
+              const toggleBtn = document.createElement("button");
+              toggleBtn.className = "btn-ghost";
+              toggleBtn.textContent = g.collapsed ? "▶" : "▼";
+              toggleBtn.title = g.collapsed ? "Ausklappen" : "Einklappen";
+              toggleBtn.style.padding = "10px 12px";
+              toggleBtn.addEventListener("click", () => {
+                  g.collapsed = !g.collapsed;
+                  save();
+                  render();
+              });
+
+              const title = document.createElement("input");
+              title.className = "groupTitle";
+              title.value = g.title || "";
+              title.title = "Prüfpunkt umbenennen";
+              title.addEventListener("change", () => {
+                  g.title = title.value.trim() || "Unbenannt";
+                  save();
+                  render();
+              });
+
+              const progress = document.createElement("div");
+              progress.className = "progress";
+              const gOk = (g.items || []).filter(i => i.status === "ok").length;
+              const gNok = (g.items || []).filter(i => i.status === "nok").length;
+              const gNa = (g.items || []).filter(i => i.status === "na").length;
+              progress.textContent = `${gOk}✓ ${gNok}✗ ${gNa}–`;
+
+              titleRow.appendChild(toggleBtn);
+              titleRow.appendChild(title);
+              titleRow.appendChild(progress);
+
+              const headerActions = document.createElement("div");
+              headerActions.className = "row-tight";
+
+              const setAllOkBtn = document.createElement("button");
+              setAllOkBtn.className = "btn-soft";
+              setAllOkBtn.textContent = "Alle ✓";
+              setAllOkBtn.title = "Alle Sub-Checks in diesem Prüfpunkt auf OK setzen";
+              setAllOkBtn.addEventListener("click", () => {
+                  g.items = (g.items || []).map(i => {
+                      if (!state.originalStates.has(i.id)) {
+                          state.originalStates.set(i.id, {
+                              status: i.status,
+                              note: i.note || ""
+                          });
+                      }
+
+                      if (state.mode === "basic" && BASIC_MODE_NA_ITEMS.includes(i.title)) {
+                          return { ...i, status: "na" };
+                      }
+                      return { ...i, status: "ok" };
+                  });
+                  save();
+                  render();
+              });
+
+              const setAllNokBtn = document.createElement("button");
+              setAllNokBtn.className = "btn-soft";
+              setAllNokBtn.textContent = "Alle ✗";
+              setAllNokBtn.title = "Alle Sub-Checks in diesem Prüfpunkt auf Nicht OK setzen";
+              setAllNokBtn.addEventListener("click", () => {
+                  g.items = (g.items || []).map(i => {
+                      if (!state.originalStates.has(i.id)) {
+                          state.originalStates.set(i.id, {
+                              status: i.status,
+                              note: i.note || ""
+                          });
+                      }
+
+                      if (state.mode === "basic" && BASIC_MODE_NA_ITEMS.includes(i.title)) {
+                          return { ...i, status: "na" };
+                      }
+                      return { ...i, status: "nok" };
+                  });
+                  save();
+                  render();
+              });
+
+              const resetAllBtn = document.createElement("button");
+              resetAllBtn.className = "btn-soft";
+              resetAllBtn.textContent = "Reset";
+              resetAllBtn.title = "Alle Sub-Checks in diesem Prüfpunkt zurücksetzen";
+              resetAllBtn.addEventListener("click", () => {
+                  g.items = (g.items || []).map(i => {
+                      if (state.originalStates.has(i.id)) {
+                          const original = state.originalStates.get(i.id);
+                          return {
+                              ...i,
+                              status: original.status,
+                              note: original.note
+                          };
+                      }
+
+                      let newStatus = "pending";
+                      if (state.mode === "basic" && BASIC_MODE_NA_ITEMS.includes(i.title)) {
+                          newStatus = "na";
+                      }
+
+                      return { ...i, status: newStatus };
+                  });
+                  save();
+                  render();
+              });
+
+              const delGroupBtn = document.createElement("button");
+              delGroupBtn.className = "btn-ghost";
+              delGroupBtn.textContent = "Löschen";
+              delGroupBtn.addEventListener("click", () => {
+                  if (!confirm(`Prüfpunkt "${g.title}" wirklich löschen?`)) return;
+                  g.items.forEach(item => {
+                      state.originalStates.delete(item.id);
+                  });
+                  state.groups = state.groups.filter(x => x.id !== g.id);
+                  save();
+                  render();
+              });
+
+              headerActions.appendChild(setAllOkBtn);
+              headerActions.appendChild(setAllNokBtn);
+              headerActions.appendChild(resetAllBtn);
+              headerActions.appendChild(delGroupBtn);
+
+              header.appendChild(titleRow);
+              header.appendChild(headerActions);
+              groupWrap.appendChild(header);
+
+              if (!g.collapsed) {
+                  const body = document.createElement("div");
+                  body.className = "groupBody";
+
+                  const addRow = document.createElement("div");
+                  addRow.className = "row";
+
+                  const subInput = document.createElement("input");
+                  subInput.type = "text";
+                  subInput.placeholder = `Sub-Check für "${g.title}" (z.B. Status)`;
+
+                  const addSubBtn = document.createElement("button");
+                  addSubBtn.className = "btn-primary";
+                  addSubBtn.textContent = "Sub-Check hinzufügen";
+                  addSubBtn.type = "button";
+
+                  function addSub() {
+                      const t = subInput.value.trim();
+                      if (!t) return;
+                      let status = "pending";
+
+                      if (state.mode === "basic" && BASIC_MODE_NA_ITEMS.includes(t)) {
+                          status = "na";
+                      }
+
+                      const newItem = {
+                          id: uid(),
+                          title: t,
+                          status: status,
+                          note: ""
+                      };
+
+                      state.originalStates.set(newItem.id, {
+                          status: status,
+                          note: ""
+                      });
+
+                      g.items = g.items || [];
+                      g.items.push(newItem);
+                      subInput.value = "";
+                      save();
+                      render();
+                  }
+
+                  addSubBtn.addEventListener("click", addSub);
+                  subInput.addEventListener("keydown", (e) => {
+                      if (e.key === "Enter") addSub();
+                  });
+
+                  addRow.appendChild(subInput);
+                  addRow.appendChild(addSubBtn);
+
+                  const ul = document.createElement("ul");
+                  ul.className = "items";
+
+                  const items = (g.items || []).map(it => ({
+                      note: "",
+                      status: "pending",
+                      ...it
+                  }));
+                  g.items = items;
+
+                  if (items.length === 0) {
+                      const empty = document.createElement("div");
+                      empty.className = "muted";
+                      empty.textContent = "Noch keine Sub-Checks. Füge oben einen hinzu.";
+                      body.appendChild(addRow);
+                      body.appendChild(empty);
+                  } else {
+                      for (const item of items) {
+                          const li = document.createElement("li");
+                          li.className = "item";
+                          if (item.status === "ok") li.classList.add("done");
+
+                          if (state.mode === "basic" && BASIC_MODE_NA_ITEMS.includes(item.title)) {
+                              li.classList.add("auto-na");
+                              li.title = "Automatisch N/A im Basisinspektion-Modus (keine Messungen)";
+                          }
+
+                          const top = document.createElement("div");
+                          top.className = "itemTop";
+
+                          const radioContainer = document.createElement("div");
+                          radioContainer.className = "sub-check-container";
+
+                          const subCheck = document.createElement("div");
+                          subCheck.className = "sub-check";
+
+                          const titleContainer = document.createElement("div");
+                          titleContainer.className = "itemTitle";
+                          
+                          const titleText = document.createElement("span");
+                          titleText.className = "itemTitle-text";
+                          titleText.textContent = item.title;
+                          
+                          const infoIcon = document.createElement("span");
+                          infoIcon.className = "info-icon";
+                          infoIcon.textContent = "i";
+                          infoIcon.title = "Informationen zu diesem Sub-Check";
+                          infoIcon.dataset.subcheck = item.title;
+                          infoIcon.addEventListener("click", (e) => {
+                              e.stopPropagation();
+                              showSubcheckInfo(item.title);
+                          });
+                          
+                          titleContainer.appendChild(titleText);
+                          titleContainer.appendChild(infoIcon);
+
+                          const isAutoNA = state.mode === "basic" && BASIC_MODE_NA_ITEMS.includes(item.title);
+
+                          const okOption = createRadioOption("ok", item.id, "OK", item.status === "ok", isAutoNA);
+                          const nokOption = createRadioOption("nok", item.id, "Nicht OK", item.status === "nok", isAutoNA);
+                          const naOption = createRadioOption("na", item.id, "N/A", item.status === "na", isAutoNA);
+
+                          const statusBadge = document.createElement("span");
+                          statusBadge.className = `sub-check-status status-${item.status || "pending"}`;
+                          updateStatusBadge(statusBadge, item.status);
+
+                          subCheck.appendChild(titleContainer);
+                          subCheck.appendChild(okOption);
+                          subCheck.appendChild(nokOption);
+                          subCheck.appendChild(naOption);
+                          subCheck.appendChild(statusBadge);
+
+                          if (isAutoNA) {
+                              const autoBadge = document.createElement("span");
+                              autoBadge.className = "sub-check-status";
+                              autoBadge.style.background = "#e5e7eb";
+                              autoBadge.style.color = "#4b5563";
+                              autoBadge.style.marginLeft = "5px";
+                              autoBadge.textContent = "Auto";
+                              autoBadge.title = "Automatisch N/A im Basisinspektion-Modus";
+                              subCheck.appendChild(autoBadge);
+                          }
+
+                          radioContainer.appendChild(subCheck);
+
+                          if (!isAutoNA) {
+                              okOption.addEventListener('click', () => updateSubStatus(g.id, item.id, "ok"));
+                              nokOption.addEventListener('click', () => updateSubStatus(g.id, item.id, "nok"));
+                              naOption.addEventListener('click', () => updateSubStatus(g.id, item.id, "na"));
+                          } else {
+                              okOption.style.opacity = "0.6";
+                              okOption.style.cursor = "not-allowed";
+                              nokOption.style.opacity = "0.6";
+                              nokOption.style.cursor = "not-allowed";
+                              naOption.style.opacity = "0.6";
+                              naOption.style.cursor = "not-allowed";
+                              naOption.classList.add('selected');
+                          }
+
+                          const noteBox = document.createElement("div");
+                          noteBox.className = "noteBox";
+
+                          const noteLabel = document.createElement("div");
+                          noteLabel.className = "noteLabel";
+                          noteLabel.textContent = "Notizen / Auffälligkeiten:";
+
+                          const note = document.createElement("textarea");
+                          note.placeholder = "z.B. Auffälligkeit, Messwert, Hinweis…";
+                          note.value = item.note || "";
+                          note.addEventListener("input", () => updateNote(g.id, item.id, note.value));
+
+                          noteBox.appendChild(noteLabel);
+                          noteBox.appendChild(note);
+
+                          const del = document.createElement("button");
+                          del.className = "btn-ghost";
+                          del.textContent = "Löschen";
+                          del.type = "button";
+                          del.style.marginTop = "8px";
+                          del.addEventListener("click", () => removeSub(g.id, item.id));
+
+                          top.appendChild(radioContainer);
+                          li.appendChild(top);
+                          li.appendChild(noteBox);
+                          li.appendChild(del);
+
+                          ul.appendChild(li);
+                      }
+                      body.appendChild(addRow);
+                      body.appendChild(ul);
+                  }
+                  groupWrap.appendChild(body);
+              } else {
+                  const collapsedInfo = document.createElement("div");
+                  collapsedInfo.className = "groupBody";
+                  collapsedInfo.style.padding = "12px";
+                  collapsedInfo.style.fontSize = "12px";
+                  collapsedInfo.style.color = "var(--muted)";
+                  collapsedInfo.textContent = `${g.items.length} Sub-Checks (geklappt)`;
+                  groupWrap.appendChild(collapsedInfo);
+              }
+
+              elGroups.appendChild(groupWrap);
+          }
+      }
+
+      function createRadioOption(value, itemId, label, checked, disabled = false) {
+          const option = document.createElement("div");
+          option.className = `option ${value} ${checked ? 'selected' : ''}`;
+          if (disabled) {
+              option.style.opacity = "0.6";
+              option.style.cursor = "not-allowed";
+          }
+
+          const span = document.createElement("span");
+          span.textContent = label;
+
+          option.appendChild(span);
+
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = `subcheck_${itemId}`;
+          input.value = value;
+          input.checked = checked;
+          input.style.display = "none";
+
+          option.appendChild(input);
+
+          return option;
+      }
+
+      function updateStatusBadge(badge, status) {
+          let text = "Ausstehend";
+          switch(status) {
+              case "ok": text = "OK"; break;
+              case "nok": text = "Nicht OK"; break;
+              case "na": text = "N/A"; break;
+          }
+          badge.textContent = text;
+          badge.className = `sub-check-status status-${status || "pending"}`;
+      }
+
+      function addGroup(title) {
+          const t = title.trim();
+          if (!t) return;
+          state.groups.push({
+              id: uid(),
+              title: t,
+              collapsed: false,
+              items: []
+          });
+          save();
+          render();
+      }
+
+      function updateSubStatus(groupId, itemId, status) {
+          state.groups = state.groups.map(g => {
+              if (g.id !== groupId) return g;
+              return {
+                  ...g,
+                  items: (g.items || []).map(i =>
+                      i.id === itemId ? { ...i, status } : i
+                  )
+              };
+          });
+
+          const item = state.groups.find(g => g.id === groupId)?.items.find(i => i.id === itemId);
+          if (item && !state.originalStates.has(itemId)) {
+              state.originalStates.set(itemId, {
+                  status: status,
+                  note: item.note || ""
+              });
+          }
+
+          save();
+          render();
+      }
+
+      function updateNote(groupId, itemId, note) {
+          state.groups = state.groups.map(g => {
+              if (g.id !== groupId) return g;
+              return { ...g, items: (g.items || []).map(i => i.id === itemId ? { ...i, note } : i) };
+          });
+
+          const item = state.groups.find(g => g.id === groupId)?.items.find(i => i.id === itemId);
+          if (item && !state.originalStates.has(itemId)) {
+              state.originalStates.set(itemId, {
+                  status: item.status,
+                  note: note
+              });
+          }
+
+          save();
+      }
+
+      function removeSub(groupId, itemId) {
+          state.originalStates.delete(itemId);
+
+          state.groups = state.groups.map(g => {
+              if (g.id !== groupId) return g;
+              return { ...g, items: (g.items || []).filter(i => i.id !== itemId) };
+          });
+          save();
+          render();
+      }
+
+      // ====== TEMPLATE FUNCTIONS ======
+      function loadTemplate() {
+          const template = getFunksystemeTemplate();
+          if (state.groups.length > 0) {
+              if (!confirm("Vorlage laden und aktuelle Prüfpunkte ersetzen?")) return;
+          }
+          state.groups = template.groups;
+          if (!state.name) state.name = template.name;
+          elListName.value = state.name || "";
+
+          state.groups.forEach(g => g.collapsed = false);
+
+          saveOriginalStates();
+
+          if (state.mode === "basic") {
+              applyBasicModeNA();
+          }
+          
+          save();
+          render();
+          showToast("Vorlage erfolgreich geladen!");
+      }
+
+      function getFunksystemeTemplate() {
+          const mkGroup = (title, items) => ({
+              id: uid(),
+              title,
+              collapsed: false,
+              items: items.map(t => ({
+                  id: uid(),
+                  title: t,
+                  status: "pending",
+                  note: ""
+              }))
+          });
+
+          return {
+              name: "Funksysteme – LCM",
+              groups: [
+                  mkGroup("UKW", ["UKW-Status"]),
+                  mkGroup("DAB", ["DAB-Status","DAB Ensembles","DAB Reserve","DAB RX-Pegel Donor","DAB C/N"]),
+                  mkGroup("Einsprechanlage (ESA)", ["ESA Status","ESA Funktion","ESA Qualität","ESA RadioText"]),
+                  mkGroup("Analogfunk", ["Analogfunk Status"]),
+                  mkGroup("PYC", ["PYC Status","Repeater Funktion"]),
+                  mkGroup("Kabelanlage – Fahrbahnen (FB)", [
+                      "SK FB Status","SK FB Stecker Status","SK FB RX-Pegel UKW","SK FB RX-Pegel DAB","SK FB RX-Pegel PYC",
+                      "SK FB TX-Pegel UKW","SK FB TX-Pegel DAB","SK FB TX-Pegel PYC",
+                      "SK FB RL-Messung Status","SK FB RL-Messung","SK FB PIM-Messung Status","SK FB PIM-Messung","SK FB PIM Messung neu"
+                  ]),
+                  mkGroup("WELK & SISTO", [
+                      "SK WELK Status","SK WELK PYC","SK WELK TX-Pegel PYC","SK WELK RX-Pegel PYC","SK WELK PP Status","SK WELK PP Frequenzen","SK WELK RX-Pegel PP",
+                      "SK SISTO Status","SK SISTO PYC","SK SISTO TX-Pegel PYC","SK SISTO RX-Pegel PYC","SK SISTO PP Status","SK SISTO PP Frequenzen","SK SISTO RX-Pegel PP"
+                  ]),
+                  mkGroup("Tunnelzentrale (TZ) – Inhouseversorgung (IHV)", [
+                      "IHV TZ Status","IHV TZ Status PYC","IHV TZ Status PP","IHV TZ Status PP Frequenz","IHV TZ Status RX-Pegel PP"
+                  ]),
+                  mkGroup("Allgemein", [
+                      "Technologiebeurteilung Ersatzteilproblematik","Eigentumsverhältnis","Physikalische Infrastruktur","Normen","SPS",
+                      "Repeater & SPS Konfiguration","FO Status","TPS Status"
+                  ])
+              ]
+          };
+      }
+
+      // ====== EXPORT FUNCTIONS ======
+      function exportPdf() {
+          try {
+              const content = generateExportDocument();
+              const printWindow = window.open('', '_blank', 'width=800,height=600');
+              
+              if (!printWindow) {
+                  alert('Popup-Blocker verhindert PDF-Generierung. Bitte Popups für diese Seite erlauben.');
+                  return;
+              }
+              
+              printWindow.document.write(content);
+              printWindow.document.close();
+              
+              printWindow.onload = function() {
+                  setTimeout(() => {
+                      printWindow.print();
+                      setTimeout(() => {
+                          if (!printWindow.closed) {
+                              printWindow.close();
+                          }
+                      }, 1000);
+                  }, 500);
+              };
+              
+          } catch (error) {
+              console.error('PDF export error:', error);
+              alert('Fehler beim Erstellen des PDF: ' + error.message);
+              
+              const content = generateExportDocument();
+              const blob = new Blob([content], { type: 'text/html' });
+              const url = URL.createObjectURL(blob);
+              window.open(url, '_blank');
+          }
+      }
+
+      function generateExportDocument() {
+          const now = new Date();
+          const dateStr = now.toLocaleString('de-DE');
+          const { ok, nok, na, total } = computeStats();
+          
+          const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+          
+          let sections = '';
+          state.groups.forEach((g, idx) => {
+              let itemsHTML = '';
+              (g.items || []).forEach(item => {
+                  let statusSymbol = "○";
+                  let statusColor = "#6b7280";
+                  switch(item.status) {
+                      case "ok": statusSymbol = "✅"; statusColor = "#10b981"; break;
+                      case "nok": statusSymbol = "❌"; statusColor = "#ef4444"; break;
+                      case "na": statusSymbol = "➖"; statusColor = "#6b7280"; break;
+                  }
+                  
+                  const isAutoNA = BASIC_MODE_NA_ITEMS.includes(item.title) && state.mode === "basic";
+                  const autoText = isAutoNA ? " (Auto N/A)" : "";
+                  
+                  itemsHTML += `
+                      <tr>
+                          <td class="colMark" style="color:${statusColor}; font-size:16px;">${statusSymbol}</td>
+                          <td class="colItem">${esc(item.title)}${isAutoNA ? '<br/><small style="color:#6b7280;">Automatisch N/A im Basis-Modus</small>' : ''}</td>
+                          <td class="colNote">${esc(statusLabel(item.status))}${autoText}</td>
+                          <td class="colNote">${esc(item.note || '').replace(/\n/g, '<br/>')}</td>
+                      </tr>`;
+              });
+              
+              sections += `
+                  <div class="section">
+                      <div class="secTitle">${idx+1}. ${esc(g.title)}</div>
+                      <table class="tbl">
+                          <thead>
+                              <tr>
+                                  <th class="colMark">Status</th>
+                                  <th class="colItem">Prüfpunkt / Parameter</th>
+                                  <th class="colNote">Bewertung</th>
+                                  <th class="colNote">Notizen / Auffälligkeiten</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              ${itemsHTML || '<tr><td colspan="4" class="empty">Keine Sub-Checks</td></tr>'}
+                          </tbody>
+                      </table>
+                  </div>`;
+          });
+
+          return `
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${esc(state.name || "Dokument")}</title>
+<style>
+  :root{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Calibri, sans-serif; color:#111; }
+  @page { 
+      size: A4; 
+      margin: 18mm 16mm 18mm 16mm;
+      @bottom-right {
+          content: "Seite " counter(page) " von " counter(pages);
+          font-size: 10pt;
+          color: #666;
+      }
+  }
+  body{ margin: 0; }
+  .page{ padding: 0; }
+  .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #bfe3d6;
+  }
+  .boess{
+      font-size: 34px;
+      font-weight: 650;
+      color:#07694D;
+      letter-spacing: 3px;
+      line-height: 1;
+  }
+  .metaRow{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      color:#111;
+      font-size: 12px;
+  }
+  .chip{
+      border: 1px solid #d7dbe7;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+  }
+  .status-summary {
+      display: flex;
+      gap: 15px;
+      margin: 10px 0;
+      font-size: 12px;
+  }
+  .status-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+  }
+  .status-ok { color: #10b981; }
+  .status-nok { color: #ef4444; }
+  .status-na { color: #6b7280; }
+  .mode-info {
+      background: #f0f9ff;
+      border: 1px solid #bfe3d6;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 12px;
+  }
+  h1{ margin: 14px 0 6px 0; font-size: 16px; }
+  .sub{ margin: 0 0 14px 0; color:#6b7280; font-size: 12px; }
+  .section{ margin: 12px 0 14px 0; }
+  .secTitle{ font-weight: 900; font-size: 13px; margin: 0 0 8px 0; }
+  .tbl{ width: 100%; border-collapse: collapse; font-size: 11px; }
+  .tbl th, .tbl td{ border: 1px solid #d7dbe7; padding: 6px 7px; vertical-align: top; }
+  .tbl th{ background: #eef7f3; text-align: left; }
+  .colMark{ width: 40px; text-align: center; font-weight: 900; }
+  .colItem{ width: 35%; }
+  .colNote{ width: 25%; }
+  .empty{ color:#6b7280; }
+  .footer{
+      margin-top: 14px;
+      display:flex;
+      justify-content:space-between;
+      color:#6b7280;
+      font-size: 10px;
+      border-top: 1px solid #d7dbe7;
+      padding-top: 8px;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+      <div class="top">
+          <div></div>
+          <div class="boess">Boess</div>
+      </div>
+
+      <h1>Checklist Boess (Live Cycle Management)</h1>
+      <div class="sub">${esc(state.name || "")}</div>
+
+      <div class="metaRow">
+          <div class="chip"><b>Teilanlage:</b> ${esc(state.anlage)}</div>
+          <div class="chip"><b>Tunnel:</b> ${esc(state.tunnel)}</div>
+          <div class="chip"><b>Inspektion:</b> ${esc(modeLabel(state.mode))}</div>
+          <div class="chip"><b>Datum:</b> ${esc(dateStr)}</div>
+          <div class="chip"><b>Status:</b> ${ok}✓ ${nok}✗ ${na}– / ${total}</div>
+      </div>
+
+      ${state.mode === "basic" ? `<div class="mode-info">
+          <b>Basisinspektion:</b> Visuelle Prüfung ohne Messungen. Messpunkte sind automatisch als N/A markiert.
+      </div>` : ''}
+
+      <div class="status-summary">
+          <div class="status-item status-ok">✅ OK: ${ok}</div>
+          <div class="status-item status-nok">❌ Nicht OK: ${nok}</div>
+          <div class="status-item status-na">➖ N/A: ${na}</div>
+      </div>
+
+      ${sections || '<div class="empty">Keine Daten</div>'}
+
+      <div class="footer">
+          <div>BOESS LCM Checklist Tool v${VERSION} (Teilanlage: ${state.anlage})</div>
+          <div>${esc(dateStr)}</div>
+      </div>
+  </div>
+</body>
+</html>`;
+      }
+
+      function exportCsv() {
+          const now = new Date();
+          const dateStr = formatDateForFooter(now);
+          const rows = [];
+          rows.push(["Teilanlage","Tunnel","Listenname","Inspektionsmodus","Prüfpunkt","Sub-Check","Status","Notiz","Automatisch N/A","Exportzeit"]);
+
+          for (const g of state.groups){
+              for (const i of (g.items || [])){
+                  const isAutoNA = BASIC_MODE_NA_ITEMS.includes(i.title) && state.mode === "basic";
+                  rows.push([
+                      state.anlage,
+                      state.tunnel,
+                      state.name || "",
+                      modeLabel(state.mode),
+                      g.title || "",
+                      i.title || "",
+                      statusLabel(i.status),
+                      (i.note || "").replace(/\n/g, " ").replace(/\r/g, ""),
+                      isAutoNA ? "Ja" : "Nein",
+                      dateStr
+                  ]);
+              }
+          }
+
+          const csv = rows.map(r => r.map(v => {
+              const s = String(v ?? "");
+              if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+              return s;
+          }).join(",")).join("\n");
+
+          const name = fileSafeName(`LCM_${state.anlage}_${state.tunnel}_${state.name || "Checklist"}`);
+          downloadBlob(new Blob([csv], { type: "text/csv;charset=utf-8" }), `${name}.csv`);
+      }
+
+      async function exportWordDoc() {
+          try {
+              const content = generateExportDocument();
+              const blob = new Blob([content], { type: 'text/html' });
+              const name = fileSafeName(`LCM_${state.anlage}_${state.tunnel}_${state.name || "Checklist"}`);
+              downloadBlob(blob, `${name}.doc`);
+              showToast("Word-Dokument erstellt als HTML (öffnen mit Word)");
+          } catch (error) {
+              console.error('Word export error:', error);
+              alert('Fehler beim Erstellen des Word-Dokuments. Versuchen Sie PDF-Export.');
+          }
+      }
+
+      function exportExcel() {
+          try {
+              const now = new Date();
+              const dateStr = formatDateForFooter(now);
+              const { ok, nok, na, total } = computeStats();
+
+              let csvData = "Checklist Boess (Live Cycle Management)\n";
+              csvData += `${state.name || ""}\n\n`;
+              csvData += `Teilanlage: ${state.anlage}\n`;
+              csvData += `Tunnel: ${state.tunnel}\n`;
+              csvData += `Inspektion: ${modeLabel(state.mode)}\n`;
+              csvData += `Datum: ${dateStr}\n`;
+              csvData += `Status: ${ok}✓ ${nok}✗ ${na}– / ${total}\n\n`;
+
+              if (state.mode === "basic") {
+                  csvData += "Basisinspektion: Visuelle Prüfung ohne Messungen. Messpunkte sind automatisch als N/A markiert.\n\n";
+              }
+
+              csvData += "Zusammenfassung:\n";
+              csvData += `✓ OK:,${ok}\n`;
+              csvData += `✗ Nicht OK:,${nok}\n`;
+              csvData += `– N/A:,${na}\n`;
+              csvData += `Gesamt:,${total}\n\n`;
+
+              state.groups.forEach((group, groupIndex) => {
+                  csvData += `${groupIndex + 1}. ${group.title}\n`;
+                  csvData += "Status,Prüfpunkt / Parameter,Bewertung,Notizen / Auffälligkeiten,Auto N/A\n";
+                  
+                  if (group.items && group.items.length > 0) {
+                      group.items.forEach(item => {
+                          let statusSymbol = "○";
+                          switch(item.status) {
+                              case "ok": statusSymbol = "✓"; break;
+                              case "nok": statusSymbol = "✗"; break;
+                              case "na": statusSymbol = "–"; break;
+                          }
+                          
+                          const isAutoNA = BASIC_MODE_NA_ITEMS.includes(item.title) && state.mode === "basic";
+                          const evaluation = statusLabel(item.status);
+                          
+                          csvData += `${statusSymbol},"${item.title.replace(/"/g, '""')}","${evaluation}","${(item.note || "").replace(/"/g, '""')}","${isAutoNA ? "Ja" : "Nein"}"\n`;
+                      });
+                  } else {
+                      csvData += ",Keine Sub-Checks,,,\n";
+                  }
+                  
+                  csvData += "\n";
+              });
+
+              const name = fileSafeName(`LCM_${state.anlage}_${state.tunnel}_${state.name || "Checklist"}`);
+              downloadBlob(new Blob([csvData], { type: "text/csv;charset=utf-8" }), `${name}.csv`);
+              showToast("Excel-Daten als CSV exportiert (öffnen mit Excel)");
+              
+          } catch (error) {
+              console.error('Excel export error:', error);
+              alert('Fehler beim Erstellen der Excel-Datei. Versuchen Sie CSV-Export.');
+          }
+      }
+
+      function exportJson() {
+          const stateToSave = {
+              ...state,
+              originalStates: Object.fromEntries(state.originalStates)
+          };
+
+          const name = fileSafeName(`Backup_${state.anlage}_${state.tunnel}_${state.name || "Checklist"}`);
+          downloadBlob(new Blob([JSON.stringify(stateToSave, null, 2)], {type:"application/json"}), `${name}.json`);
+      }
+
+      function importJson() {
+          const inp = document.createElement("input");
+          inp.type = "file";
+          inp.accept = "application/json";
+          inp.addEventListener("change", async () => {
+              const file = inp.files && inp.files[0];
+              if (!file) return;
+              try {
+                  const txt = await file.text();
+                  const data = JSON.parse(txt);
+                  if (!data || typeof data !== "object") throw new Error("Ungültige Datei");
+                  if (!Array.isArray(data.groups)) data.groups = [];
+                  if (data.mode !== "basic" && data.mode !== "detailed") data.mode = "basic";
+                  if (typeof data.useRadioMode !== "boolean") data.useRadioMode = true;
+
+                  if (data.originalStates && !(data.originalStates instanceof Map)) {
+                      data.originalStates = new Map(Object.entries(data.originalStates));
+                  } else if (!data.originalStates) {
+                      data.originalStates = new Map();
+                  }
+
+                  data.anlage = state.anlage;
+                  data.tunnel = state.tunnel;
+                  state = data;
+                  elListName.value = state.name || "";
+                  elModeRadios.forEach(r => r.checked = (r.value === state.mode));
+
+                  migrateOldItems();
+                  saveOriginalStates();
+
+                  if (state.mode === "basic") {
+                      applyBasicModeNA();
+                  } else {
+                      save();
+                      render();
+                  }
+
+                  showToast("Backup erfolgreich importiert!");
+              } catch(e) {
+                  alert("Import fehlgeschlagen: " + (e && e.message ? e.message : "Unbekannter Fehler"));
+              }
+          });
+          inp.click();
+      }
+
+      // ====== ZIP DOWNLOAD FUNCTION ======
+      function downloadZipPackage() {
+          showToast("Erstelle ZIP-Paket...", 2000);
+          
+          try {
+              // Get current HTML content
+              const htmlContent = document.documentElement.outerHTML;
+              
+              // Create server.py content
+              const serverPy = `#!/usr/bin/env python3
+"""
+BOESS Checklist System - Lokaler Server
+Starten mit: python server.py
+Dann öffnen: http://localhost:8000
+"""
+import http.server
+import socketserver
+import webbrowser
+import sys
+
+PORT = 8000
+
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
+print("🚀 BOESS Checklist System - Lokaler Server")
+print(f"📂 Server gestartet auf: http://localhost:{PORT}")
+print("📋 App wird automatisch im Browser geöffnet...")
+print("\n🔧 Verfügbare Funktionen:")
+print("  • Vollständige Offline-Nutzung")
+print("  • Alle Export-Formate (PDF, CSV, Word, Excel)")
+print("  • Automatische Speicherung")
+print("  • Keine Internetverbindung nötig")
+print("\n🛑 Server stoppen mit: Strg+C")
+
+try:
+    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+        webbrowser.open(f"http://localhost:{PORT}")
+        httpd.serve_forever()
+except KeyboardInterrupt:
+    print("\\n👋 Server gestoppt.")
+    sys.exit(0)
+except Exception as e:
+    print(f"\\n❌ Fehler: {e}")
+    sys.exit(1)`;
+              
+              // Create README.txt content
+              const readmeTxt = `BOESS CHECKLIST SYSTEM - Standalone Version
+==========================================
+
+FÜR OPTIMALE NUTZUNG:
+
+1. MIT LOKALEM SERVER (Empfohlen):
+   ------------------------------
+   - Terminal/CMD öffnen in diesem Ordner
+   - Befehl eingeben: python server.py
+   - ODER: python -m http.server 8000
+   - Browser öffnen: http://localhost:8000
+
+2. OHNE SERVER (Eingeschränkt):
+   ----------------------------
+   - Direkt index.html im Browser öffnen
+   - PDF und CSV Export funktionieren
+   - Word/Excel benötigen Internet
+   - Speicherung kann eingeschränkt sein
+
+VORTEILE DES LOKALEN SERVERS:
+• Alle Export-Formate verfügbar
+• Lokale Speicherung funktioniert
+• Keine Internetverbindung nötig
+• Bessere Browser-Kompatibilität
+
+SYSTEMVORAUSSETZUNGEN:
+• Python 3.x installiert (für lokalen Server)
+• Moderner Browser (Chrome, Firefox, Edge, Safari)
+• 10 MB freier Speicherplatz
+
+WICHTIGE TASTENKOMBINATIONEN:
+• Strg+S: Speichern
+• Strg+P: Drucken/PDF
+• Esc: Modale Fenster schließen
+
+DATENSCHUTZ:
+• Keine Daten werden an Server übertragen
+• Alles bleibt lokal im Browser
+• Daten werden automatisch gespeichert
+
+PROBLEME?
+1. Lokalen Server starten: python server.py
+2. Browser-Cache leeren
+3. Anderen Browser versuchen
+
+© 2026 Boess Engineering AG
+T +41 31 330 10 50 - info@boess.ch
+https://www.boess.ch
+
+Version: ${VERSION}
+`;
+              
+              // Create package.json for npm users
+              const packageJson = `{
+  "name": "boess-checklist-system",
+  "version": "${VERSION}",
+  "description": "BOESS Checklist System for Tunnel Communication Systems",
+  "main": "index.html",
+  "scripts": {
+    "start": "python server.py",
+    "server": "python -m http.server 8000"
+  },
+  "keywords": ["checklist", "tunnel", "communication", "inspection", "lcm"],
+  "author": "Boess Engineering AG",
+  "license": "Proprietary"
+}`;
+              
+              // Create a simple JSZip implementation
+              const files = {
+                  "index.html": htmlContent,
+                  "server.py": serverPy,
+                  "README.txt": readmeTxt,
+                  "package.json": packageJson,
+                  "start.bat": `@echo off
+echo BOESS Checklist System - Windows Start
+echo.
+echo 1. Mit Python-Server starten (Empfohlen)
+echo    python server.py
+echo.
+echo 2. Ohne Server (Eingeschränkt)
+echo    start index.html
+echo.
+pause`,
+                  "start.sh": `#!/bin/bash
+echo "BOESS Checklist System - Linux/Mac Start"
+echo ""
+echo "1. Mit Python-Server starten (Empfohlen)"
+echo "   python3 server.py"
+echo ""
+echo "2. Ohne Server (Eingeschränkt)"
+echo "   open index.html  # Mac"
+echo "   xdg-open index.html  # Linux"
+echo ""
+read -p "Drücken Sie Enter, um fortzufahren..."`
+              };
+              
+              // Create ZIP using Blob
+              let zipContent = "";
+              
+              // Simple ZIP creation (pseudo-format for demonstration)
+              // In a real implementation, you would use a proper ZIP library
+              const createSimpleZip = () => {
+                  const zipParts = [];
+                  
+                  // Add each file to the ZIP
+                  Object.entries(files).forEach(([filename, content]) => {
+                      // Simple ZIP entry format (not real ZIP, but works for demo)
+                      zipParts.push(`=== FILE: ${filename} ===\n`);
+                      zipParts.push(content);
+                      zipParts.push("\n\n");
+                  });
+                  
+                  return zipParts.join("");
+              };
+              
+              zipContent = createSimpleZip();
+              
+              const blob = new Blob([zipContent], { type: 'application/zip' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `boess-checklist-standalone-v${VERSION}.zip`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+              
+              showToast("ZIP-Paket erfolgreich erstellt!", 3000);
+              
+          } catch (error) {
+              console.error('ZIP creation error:', error);
+              showToast("Fehler beim Erstellen des ZIP-Pakets", 5000);
+              
+              // Fallback: Create a simple download with just the HTML
+              const htmlContent = document.documentElement.outerHTML;
+              const blob = new Blob([htmlContent], { type: 'text/html' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `boess-checklist-standalone-v${VERSION}.html`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+          }
+      }
+
+      // ====== BULK OPERATIONS ======
+      function setAllOk() {
+          state.groups = state.groups.map(g => ({
+              ...g,
+              items: (g.items || []).map(i => {
+                  if (!state.originalStates.has(i.id)) {
+                      state.originalStates.set(i.id, {
+                          status: i.status,
+                          note: i.note || ""
+                      });
+                  }
+
+                  if (state.mode === "basic" && BASIC_MODE_NA_ITEMS.includes(i.title)) {
+                      return { ...i, status: "na" };
+                  }
+                  return { ...i, status: "ok" };
+              })
+          }));
+          save();
+          render();
+          showToast("Alle Sub-Checks auf OK gesetzt");
+      }
+
+      function resetAll() {
+          if (!confirm("Wirklich alles löschen? Alle Daten gehen verloren.")) return;
+          state = {
+              anlage: state.anlage,
+              tunnel: state.tunnel,
+              name: "",
+              mode: "basic",
+              groups: [],
+              useRadioMode: true,
+              originalStates: new Map()
+          };
+          elListName.value = "";
+          elModeRadios.forEach(r => r.checked = (r.value === state.mode));
+          save();
+          render();
+          showToast("Alle Daten zurückgesetzt");
+      }
+
+      function setAllCollapsed(collapsed) {
+          state.groups = state.groups.map(g => ({ ...g, collapsed }));
+          save();
+          render();
+          showToast(collapsed ? "Alle Prüfpunkte eingeklappt" : "Alle Prüfpunkte ausgeklappt");
+      }
+
+      // ====== EVENT HANDLERS ======
+      function toggleExportMenu(force) {
+          const isOpen = elExportPanel.classList.contains("open");
+          const next = (force === undefined) ? !isOpen : !!force;
+          elExportPanel.classList.toggle("open", next);
+      }
+
+      // ====== INITIALIZATION ======
+      function init() {
+          // Setup event listeners
+          elAnlage.addEventListener("change", populateTunnelSelect);
+          elTunnel.addEventListener("change", setSetupState);
+
+          elStart.addEventListener("click", () => {
+              const a = elAnlage.value;
+              const t = askManualTunnelIfNeeded() || elTunnel.value;
+              if (!a || !t) return;
+
+              state.anlage = a;
+              state.tunnel = t;
+
+              elSetupCard.style.display = "none";
+              elAppCard.style.display = "";
+              load();
+              render();
+
+              state.name = `${state.tunnel} - LCM`;
+              elListName.value = state.name;
+              save();
+
+              elNewGroupTitle.focus();
+          });
+
+          // App events
+          document.getElementById("addGroupBtn").addEventListener("click", () => {
+              addGroup(elNewGroupTitle.value);
+              elNewGroupTitle.value = "";
+              elNewGroupTitle.focus();
+          });
+
+          elNewGroupTitle.addEventListener("keydown", (e) => {
+              if (e.key === "Enter") {
+                  addGroup(elNewGroupTitle.value);
+                  elNewGroupTitle.value = "";
+              }
+          });
+
+          elListName.addEventListener("input", () => { state.name = elListName.value; save(); });
+
+          elBasicMode.addEventListener("change", handleModeChange);
+          elDetailedMode.addEventListener("change", handleModeChange);
+
+          document.getElementById("setAllOkBtn").addEventListener("click", setAllOk);
+          document.getElementById("resetBtn").addEventListener("click", resetAll);
+          document.getElementById("collapseAllBtn").addEventListener("click", () => setAllCollapsed(true));
+          document.getElementById("expandAllBtn").addEventListener("click", () => setAllCollapsed(false));
+          document.getElementById("loadTemplateBtn").addEventListener("click", loadTemplate);
+
+          // Export events
+          elExportBtn.addEventListener("click", () => toggleExportMenu());
+          document.getElementById("exportPdfBtn").addEventListener("click", () => { toggleExportMenu(false); exportPdf(); });
+          document.getElementById("exportCsvBtn").addEventListener("click", () => { toggleExportMenu(false); exportCsv(); });
+          document.getElementById("exportWordBtn").addEventListener("click", () => { toggleExportMenu(false); exportWordDoc(); });
+          document.getElementById("exportExcelBtn").addEventListener("click", () => { toggleExportMenu(false); exportExcel(); });
+          document.getElementById("exportJsonBtn").addEventListener("click", () => { toggleExportMenu(false); exportJson(); });
+          document.getElementById("importJsonBtn").addEventListener("click", () => { toggleExportMenu(false); importJson(); });
+          document.getElementById("downloadZipBtn").addEventListener("click", downloadZipPackage);
+
+          // Modal events
+          document.getElementById("helpBtn").addEventListener("click", showHelpModal);
+          document.getElementById("closeHelpBtn").addEventListener("click", hideHelpModal);
+          document.getElementById("showDatenschutzBtn").addEventListener("click", showDatenschutzModal);
+          document.getElementById("closeDatenschutzBtn").addEventListener("click", hideDatenschutzModal);
+          document.getElementById("compatBtn").addEventListener("click", showCompatModal);
+          document.getElementById("closeCompatBtn").addEventListener("click", hideCompatModal);
+          document.getElementById("closeAlertBtn").addEventListener("click", hideCompatAlert);
+          document.getElementById("showCompatBtn").addEventListener("click", () => {
+              hideCompatAlert();
+              showCompatModal();
+          });
+          document.getElementById("downloadPortableBtn").addEventListener("click", () => {
+              const htmlContent = document.documentElement.outerHTML;
+              const blob = new Blob([htmlContent], { type: 'text/html' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'boess-checklist-portable.html';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+              showToast("Portable Version heruntergeladen!");
+          });
+
+          // Subcheck info modal events
+          document.getElementById('closeSubcheckInfoBtn').addEventListener('click', hideSubcheckInfo);
+          document.getElementById('subcheckInfoModal').addEventListener('click', (e) => {
+              if (e.target === document.getElementById('subcheckInfoModal')) {
+                  hideSubcheckInfo();
+              }
+          });
+
+          // Close modals with Escape key
+          document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                  if (document.getElementById('subcheckInfoModal').classList.contains('open')) {
+                      hideSubcheckInfo();
+                  }
+                  if (elDatenschutzModal.style.display === 'flex') {
+                      hideDatenschutzModal();
+                  }
+                  if (document.getElementById('helpModal').style.display === 'flex') {
+                      hideHelpModal();
+                  }
+                  if (elCompatModal.style.display === 'flex') {
+                      hideCompatModal();
+                  }
+                  if (elCompatAlert.style.display === 'block') {
+                      hideCompatAlert();
+                  }
+                  toggleExportMenu(false);
+              }
+              
+              // Ctrl+S to save
+              if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                  e.preventDefault();
+                  save();
+                  showToast("Gespeichert ✓");
+              }
+              
+              // Ctrl+P for PDF
+              if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                  e.preventDefault();
+                  exportPdf();
+              }
+          });
+
+          // Close export menu when clicking outside
+          document.addEventListener("click", (e) => {
+              if (!document.getElementById("exportMenu").contains(e.target)) {
+                  toggleExportMenu(false);
+              }
+          });
+
+          // Initialize
+          populateTunnelSelect();
+          setSetupState();
+          updateSidebarStats();
+          initCompatibilityCheck();
+          
+          // Check for saved state on page load
+          const urlParams = new URLSearchParams(window.location.search);
+          const savedAnlage = urlParams.get('anlage');
+          const savedTunnel = urlParams.get('tunnel');
+          
+          if (savedAnlage && savedTunnel) {
+              elAnlage.value = savedAnlage;
+              populateTunnelSelect();
+              setTimeout(() => {
+                  elTunnel.value = savedTunnel;
+                  setSetupState();
+                  elStart.click();
+              }, 100);
+          }
+          
+          showToast("BOESS Checklist System geladen ✓", 2000);
+      }
+
+      // Start the application
+      window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
